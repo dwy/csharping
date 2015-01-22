@@ -82,11 +82,35 @@ namespace CSharping
             Assert.AreEqual("task long ended", messages[5]);
         }
 
+        [Test]
+        public void OneTask_WithResult_ResultAwaitsTheTask()
+        {
+            var model = new AsyncModel();
+
+            model.AddMessage("starting main");
+            Task<string> task = SimulateWorkWithResultAsync("A", 10, model);
+            model.AddMessage("doing independent work");
+            model.AddMessage("task.Result awaits the task. Result={0}", task.Result);
+
+            var messages = model.GetMessages();
+            Assert.AreEqual("starting main", messages[0]);
+            Assert.AreEqual("starting task A", messages[1]);
+            Assert.AreEqual("doing independent work", messages[2]);
+            Assert.AreEqual("task A ended", messages[3]);
+            Assert.AreEqual("task.Result awaits the task. Result=A", messages[4]);
+        }
+
         private async Task SimulateWorkAsync(string name, int ms, AsyncModel model)
         {
             model.AddMessage("starting task {0}", name);
             await Task.Delay(ms);
             model.AddMessage("task {0} ended", name);
+        }
+
+        private async Task<string> SimulateWorkWithResultAsync(string name, int ms, AsyncModel model)
+        {
+            await SimulateWorkAsync(name, ms, model);
+            return name;
         }
     }
 }
