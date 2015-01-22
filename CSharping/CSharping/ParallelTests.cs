@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Threading;
+using NUnit.Framework;
 using System.Threading.Tasks;
 
 namespace CSharping
@@ -7,7 +9,7 @@ namespace CSharping
     public class ParallelTests
     {
         [Test]
-        public void Parallel_Invoke()
+        public void Invoke()
         {
             var queue = new MessageQueue();
             
@@ -21,6 +23,19 @@ namespace CSharping
             CollectionAssert.Contains(messages, "work A");
             CollectionAssert.Contains(messages, "work B");
             CollectionAssert.Contains(messages, "work C");
+        }
+
+        [Test]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public void Invoke_Canceled_Throws()
+        {
+            var queue = new MessageQueue();
+            var cancelSource = new CancellationTokenSource();
+            var options = new ParallelOptions { CancellationToken = cancelSource.Token };
+            cancelSource.Cancel();
+
+            Parallel.Invoke(options,
+                () => DoWork("A", queue));
         }
 
         private void DoWork(string name, MessageQueue queue)
