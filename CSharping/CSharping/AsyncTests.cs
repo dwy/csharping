@@ -9,13 +9,13 @@ namespace CSharping
         [Test]
         public async void OneTask_Awaited()
         {
-            var model = new AsyncModel();
+            var queue = new MessageQueue();
 
-            model.AddMessage("starting main");
-            await SimulateWorkAsync("A", 10, model);
-            model.AddMessage("after awaited task");
+            queue.AddMessage("starting main");
+            await SimulateWorkAsync("A", 10, queue);
+            queue.AddMessage("after awaited task");
 
-            var messages = model.GetMessages();
+            var messages = queue.GetAll();
             Assert.AreEqual("starting main", messages[0]);
             Assert.AreEqual("starting task A", messages[1]);
             Assert.AreEqual("task A ended", messages[2]);
@@ -25,15 +25,15 @@ namespace CSharping
         [Test]
         public async void OneTask_WithIndependentWork()
         {
-            var model = new AsyncModel();
+            var queue = new MessageQueue();
 
-            model.AddMessage("starting main");
-            Task task = SimulateWorkAsync("A", 10, model);
-            model.AddMessage("doing independent work");
+            queue.AddMessage("starting main");
+            Task task = SimulateWorkAsync("A", 10, queue);
+            queue.AddMessage("doing independent work");
             
             await task;
 
-            var messages = model.GetMessages();
+            var messages = queue.GetAll();
             Assert.AreEqual("starting main", messages[0]);
             Assert.AreEqual("starting task A", messages[1]);
             Assert.AreEqual("doing independent work", messages[2]);
@@ -43,15 +43,15 @@ namespace CSharping
         [Test]
         public async void TwoTasks_Awaited()
         {
-            var model = new AsyncModel();
+            var queue = new MessageQueue();
 
-            model.AddMessage("starting main");
-            await SimulateWorkAsync("A", 10, model);
-            await SimulateWorkAsync("B", 10, model);
+            queue.AddMessage("starting main");
+            await SimulateWorkAsync("A", 10, queue);
+            await SimulateWorkAsync("B", 10, queue);
 
-            model.AddMessage("after awaited tasks");
+            queue.AddMessage("after awaited tasks");
 
-            var messages = model.GetMessages();
+            var messages = queue.GetAll();
             Assert.AreEqual("starting main", messages[0]);
             Assert.AreEqual("starting task A", messages[1]);
             Assert.AreEqual("task A ended", messages[2]);
@@ -63,17 +63,17 @@ namespace CSharping
         [Test]
         public async void TwoTasks_WithIndependentWork()
         {
-            var model = new AsyncModel();
+            var queue = new MessageQueue();
 
-            model.AddMessage("starting main");
-            Task shortTask = SimulateWorkAsync("short", 10, model);
-            Task longTask = SimulateWorkAsync("long", 20, model);
+            queue.AddMessage("starting main");
+            Task shortTask = SimulateWorkAsync("short", 10, queue);
+            Task longTask = SimulateWorkAsync("long", 20, queue);
 
-            model.AddMessage("doing independent work");
+            queue.AddMessage("doing independent work");
 
             await Task.WhenAll(shortTask, longTask);
 
-            var messages = model.GetMessages();
+            var messages = queue.GetAll();
             Assert.AreEqual("starting main", messages[0]);
             Assert.AreEqual("starting task short", messages[1]);
             Assert.AreEqual("starting task long", messages[2]);
@@ -85,14 +85,14 @@ namespace CSharping
         [Test]
         public void OneTask_WithResult_ResultAwaitsTheTask()
         {
-            var model = new AsyncModel();
+            var queue = new MessageQueue();
 
-            model.AddMessage("starting main");
-            Task<string> task = SimulateWorkWithResultAsync("A", 10, model);
-            model.AddMessage("doing independent work");
-            model.AddMessage("task.Result awaits the task. Result={0}", task.Result);
+            queue.AddMessage("starting main");
+            Task<string> task = SimulateWorkWithResultAsync("A", 10, queue);
+            queue.AddMessage("doing independent work");
+            queue.AddMessage("task.Result awaits the task. Result={0}", task.Result);
 
-            var messages = model.GetMessages();
+            var messages = queue.GetAll();
             Assert.AreEqual("starting main", messages[0]);
             Assert.AreEqual("starting task A", messages[1]);
             Assert.AreEqual("doing independent work", messages[2]);
@@ -100,16 +100,16 @@ namespace CSharping
             Assert.AreEqual("task.Result awaits the task. Result=A", messages[4]);
         }
 
-        private async Task SimulateWorkAsync(string name, int ms, AsyncModel model)
+        private async Task SimulateWorkAsync(string name, int ms, MessageQueue queue)
         {
-            model.AddMessage("starting task {0}", name);
+            queue.AddMessage("starting task {0}", name);
             await Task.Delay(ms);
-            model.AddMessage("task {0} ended", name);
+            queue.AddMessage("task {0} ended", name);
         }
 
-        private async Task<string> SimulateWorkWithResultAsync(string name, int ms, AsyncModel model)
+        private async Task<string> SimulateWorkWithResultAsync(string name, int ms, MessageQueue queue)
         {
-            await SimulateWorkAsync(name, ms, model);
+            await SimulateWorkAsync(name, ms, queue);
             return name;
         }
     }

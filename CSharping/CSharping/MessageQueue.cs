@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSharping
 {
-    public class AsyncModel
+    public class MessageQueue
     {
         private readonly ConcurrentQueue<string> _messages = new ConcurrentQueue<string>();
 
@@ -14,7 +14,7 @@ namespace CSharping
             // string.Format(" on threadId {0}", Thread.CurrentThread.ManagedThreadId)
         }
 
-        public List<string> GetMessages()
+        public List<string> GetAll()
         {
             return _messages.ToList();
         }
