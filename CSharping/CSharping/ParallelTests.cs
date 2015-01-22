@@ -38,6 +38,22 @@ namespace CSharping
                 () => DoWork("A", queue));
         }
 
+        [Test]
+        public void For()
+        {
+            var queue = new MessageQueue();
+
+            Parallel.For(0, 4, i => DoWork("" + i, queue));
+
+            var messages = queue.GetAll();
+            // ordering of messages can vary
+            CollectionAssert.Contains(messages, "work 1");
+            CollectionAssert.Contains(messages, "work 2");
+            CollectionAssert.Contains(messages, "work 3");
+            CollectionAssert.DoesNotContain(messages, "work 4");
+        }
+
+
         private void DoWork(string name, MessageQueue queue)
         {
             queue.AddMessage("work {0}", name);
