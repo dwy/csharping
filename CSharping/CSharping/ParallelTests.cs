@@ -54,7 +54,7 @@ namespace CSharping
         }
 
         [Test]
-        public void Foreach()
+        public void ForEach()
         {
             var queue = new MessageQueue();
             var names = new[] {"A", "B", "C", "D"};
@@ -69,6 +69,22 @@ namespace CSharping
             CollectionAssert.Contains(messages, "work D");
         }
 
+        [Test]
+        public void ForEach_Indexed()
+        {
+            var queue = new MessageQueue();
+            var names = new[] { "A", "B", "C", "D" };
+
+            Parallel.ForEach(names, 
+                (name, state, i) => DoWork(name + i, queue));
+
+            var messages = queue.GetAll();
+            // ordering of messages can vary
+            CollectionAssert.Contains(messages, "work A0");
+            CollectionAssert.Contains(messages, "work B1");
+            CollectionAssert.Contains(messages, "work C2");
+            CollectionAssert.Contains(messages, "work D3");
+        }
 
         private void DoWork(string name, MessageQueue queue)
         {
