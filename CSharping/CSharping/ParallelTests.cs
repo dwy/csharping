@@ -86,6 +86,35 @@ namespace CSharping
             CollectionAssert.Contains(messages, "work D3");
         }
 
+        [Test]
+        public void ForEach_BreakOnNameC()
+        {
+            var queue = new MessageQueue();
+            var names = new[] { "A", "B", "C", "D" };
+
+            Parallel.ForEach(names,
+                (name, state) => DoWorkBreakOnNameC(name, queue, state));
+
+            var messages = queue.GetAll();
+            // ordering of messages can vary
+            CollectionAssert.Contains(messages, "work A");
+            CollectionAssert.Contains(messages, "work B");
+            CollectionAssert.DoesNotContain(messages, "work C");
+            CollectionAssert.DoesNotContain(messages, "work D");
+        }
+
+        private void DoWorkBreakOnNameC(string name, MessageQueue queue, ParallelLoopState state)
+        {
+            if (string.Equals(name, "C"))
+            {
+                state.Break();
+            }
+            else
+            {
+                DoWork(name, queue);
+            }
+        }
+
         private void DoWork(string name, MessageQueue queue)
         {
             queue.AddMessage("work {0}", name);
