@@ -53,6 +53,22 @@ namespace CSharping
             CollectionAssert.DoesNotContain(messages, "work 4");
         }
 
+        [Test]
+        public void Foreach()
+        {
+            var queue = new MessageQueue();
+            var names = new[] {"A", "B", "C", "D"};
+
+            Parallel.ForEach(names, name => DoWork(name, queue));
+
+            var messages = queue.GetAll();
+            // ordering of messages can vary
+            CollectionAssert.Contains(messages, "work A");
+            CollectionAssert.Contains(messages, "work B");
+            CollectionAssert.Contains(messages, "work C");
+            CollectionAssert.Contains(messages, "work D");
+        }
+
 
         private void DoWork(string name, MessageQueue queue)
         {
