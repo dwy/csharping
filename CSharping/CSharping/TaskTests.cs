@@ -83,6 +83,25 @@ namespace CSharping
             CollectionAssert.Contains(messages, "Task B");
         }
 
+        [Test]
+        public async void NewTask_TaskCreationOptions()
+        {
+            var queue = new MessageQueue();
+            // for long, blocking Tasks
+            var taskA = new Task<string>(() => DoWork("Task A", queue), TaskCreationOptions.LongRunning);
+            // schedule Tasks in the order they were created, when possible
+            var taskB = new Task<string>(() => DoWork("Task B", queue), TaskCreationOptions.PreferFairness); 
+
+            taskA.Start();
+            taskB.Start();
+
+            Task.WaitAll(taskA, taskB);
+
+            // ordering of messages can vary
+            var messages = queue.GetAll();
+            CollectionAssert.Contains(messages, "Task A");
+            CollectionAssert.Contains(messages, "Task B");
+        }
 
         private string DoWork(string name, MessageQueue queue)
         {
