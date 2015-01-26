@@ -1,4 +1,5 @@
-﻿using System.Runtime.Remoting.Messaging;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -27,6 +28,25 @@ namespace CSharping
             CollectionAssert.Contains(messages, "Task B");
             CollectionAssert.Contains(messages, "Task B finished");
             CollectionAssert.Contains(messages, "Task A finished");
+        }
+
+        [Test]
+        public void StartNew_StateObject()
+        {
+            var queue = new MessageQueue();
+            Task<string> taskA = Task.Factory.StartNew<string>(DoWorkWithState, "Task A");
+
+            // task.Result awaits the task
+            DoWork(taskA.Result + " finished", queue);
+
+            var messages = queue.GetAll();
+            CollectionAssert.Contains(messages, "Task A finished");
+            Assert.AreEqual("Task A", taskA.AsyncState);
+        }
+
+        private string DoWorkWithState(object asyncState)
+        {
+            return asyncState as string;
         }
 
         [Test]
