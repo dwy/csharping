@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CSharping
@@ -122,11 +125,38 @@ namespace CSharping
             // detached Task is independent from 'parent'
         }
 
+        [Test]
+        public void AggregateException()
+        {
+            var queue = new MessageQueue();
+            Task<string> taskA = Task.Factory.StartNew(() => ThrowException("Task A failed"));
+            Task<string> taskB = Task.Factory.StartNew(() => DoWork("Task B", queue));
+            Task<string> taskC = Task.Factory.StartNew(() => ThrowException("Task C failed"));
+
+            try
+            {
+                Task.WaitAll(taskA, taskB, taskC);
+            }
+            catch (AggregateException ex)
+            {
+                Assert.AreEqual(2, ex.InnerExceptions.Count);
+                var exceptionMessages = ex.InnerExceptions.Select(e => e.Message).ToList();
+                CollectionAssert.Contains(exceptionMessages, "Task A failed");
+                CollectionAssert.Contains(exceptionMessages, "Task C failed");
+            }
+
+            CollectionAssert.Contains(queue.GetAll(), "Task B");
+        }
 
         private string DoWork(string name, MessageQueue queue)
         {
             queue.AddMessage(name);
             return name;
+        }
+
+        private string ThrowException(string message)
+        {
+            throw new Exception(message);
         }
     }
 }
