@@ -17,10 +17,11 @@ namespace CSharping
             DoWork("independent work", queue);
             // await the tasks
             DoWork(taskB.Result + " finished", queue);
-            DoWork(taskA.Result + " finished", queue);
+            taskA.Wait();
+            queue.AddMessage(taskA.Result + " finished");
 
+            // ordering of messages can vary
             var messages = queue.GetAll();
-
             CollectionAssert.Contains(messages, "independent work");
             CollectionAssert.Contains(messages, "Task A");
             CollectionAssert.Contains(messages, "Task B");
@@ -28,6 +29,24 @@ namespace CSharping
             CollectionAssert.Contains(messages, "Task A finished");
         }
 
+        [Test]
+        public async void NewTask_Start()
+        {
+            var queue = new MessageQueue();
+            var taskA = new Task<string>(() => DoWork("Task A", queue));
+            var taskB = new Task<string>(() => DoWork("Task B", queue));
+
+            taskA.Start();
+            taskB.Start();
+
+            // await the tasks
+            await Task.WhenAll(taskA, taskB);
+
+            // ordering of messages can vary
+            var messages = queue.GetAll();
+            CollectionAssert.Contains(messages, "Task A");
+            CollectionAssert.Contains(messages, "Task B");
+        }
 
 
         private string DoWork(string name, MessageQueue queue)
