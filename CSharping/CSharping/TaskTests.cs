@@ -50,6 +50,20 @@ namespace CSharping
         }
 
         [Test]
+        public void StartNew_LambdaAndStateObject()
+        {
+            var queue = new MessageQueue();
+            var taskA = Task.Factory.StartNew(state => DoWork("Task A", queue), "asyncState for Task A");
+
+            // task.Result awaits the task
+            DoWork(taskA.Result + " finished", queue);
+
+            var messages = queue.GetAll();
+            CollectionAssert.Contains(messages, "Task A finished");
+            Assert.AreEqual("asyncState for Task A", taskA.AsyncState);
+        }
+
+        [Test]
         public async void NewTask_Start()
         {
             var queue = new MessageQueue();
