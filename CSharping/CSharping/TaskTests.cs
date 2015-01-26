@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CSharping
@@ -84,7 +82,7 @@ namespace CSharping
         }
 
         [Test]
-        public async void NewTask_TaskCreationOptions()
+        public void NewTask_TaskCreationOptions()
         {
             var queue = new MessageQueue();
             // for long, blocking Tasks
@@ -102,6 +100,28 @@ namespace CSharping
             CollectionAssert.Contains(messages, "Task A");
             CollectionAssert.Contains(messages, "Task B");
         }
+
+        [Test]
+        public async void ChildTask_AwaitParent_ChildIsAwaited()
+        {
+            var queue = new MessageQueue();
+            Task parent = Task.Factory.StartNew(() =>
+            {
+                DoWork("parent task", queue);
+
+                Task.Factory.StartNew(() => DoWork("detached task", queue));
+
+                Task.Factory.StartNew(() => DoWork("child task", queue), TaskCreationOptions.AttachedToParent);
+            });
+
+            await parent;
+
+            var messages = queue.GetAll();
+            CollectionAssert.Contains(messages, "parent task");
+            CollectionAssert.Contains(messages, "child task");
+            // detached Task is independent from 'parent'
+        }
+
 
         private string DoWork(string name, MessageQueue queue)
         {
