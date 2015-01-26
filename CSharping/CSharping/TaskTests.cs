@@ -75,6 +75,7 @@ namespace CSharping
 
             // await the tasks
             await Task.WhenAll(taskA, taskB);
+            // equivalent to: Task.WaitAll(taskA, taskB);
 
             // ordering of messages can vary
             var messages = queue.GetAll();
