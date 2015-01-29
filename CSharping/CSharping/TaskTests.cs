@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -146,6 +146,40 @@ namespace CSharping
             }
 
             CollectionAssert.Contains(queue.GetAll(), "Task B");
+        }
+
+        [Test]
+        [ExpectedException(typeof(TaskCanceledException))]
+        public async void AwaitACanceledTask_ThrowsTaskCanceledException()
+        {
+            var queue = new MessageQueue();
+            var cancelSource = new CancellationTokenSource();
+
+            Task<string> task = Task.Factory.StartNew(() => DoWork("work", queue), cancelSource.Token);
+
+            cancelSource.Cancel();
+
+            await task;
+        }
+
+        [Test]
+        public async void TaskWaitOnACanceledTask_ThrowsAggregateException()
+        {
+            var cancelSource = new CancellationTokenSource();
+            var token = cancelSource.Token;
+
+            var taskToCancel = Task.Delay(1000, token);
+            cancelSource.Cancel();
+
+            try
+            {
+                taskToCancel.Wait(); // same as: Task.WaitAll(task);
+            }
+            catch (AggregateException ex)
+            {
+                Assert.AreEqual(1, ex.InnerExceptions.Count);
+                Assert.IsInstanceOf(typeof(TaskCanceledException), ex.InnerException);
+            }
         }
 
         private string DoWork(string name, MessageQueue queue)
