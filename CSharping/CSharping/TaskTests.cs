@@ -196,6 +196,21 @@ namespace CSharping
             Assert.AreEqual("continuation after first", messages[1]);
         }
 
+        [Test]
+        public void Continuation_ExecuteOnTheSameThread()
+        {
+            var queue = new MessageQueue();
+            Task<string> first = Task.Factory.StartNew(() => DoWork("first", queue));
+            Task<string> continuation = first.ContinueWith(
+                antecedentTask => DoWork("continuation after " + antecedentTask.Result, queue),
+                TaskContinuationOptions.ExecuteSynchronously);
+
+            Task.WaitAll(first, continuation);
+
+            var messages = queue.GetAll();
+            Assert.AreEqual("first", messages[0]);
+            Assert.AreEqual("continuation after first", messages[1]);
+        }
 
         private string DoWork(string name, MessageQueue queue)
         {
