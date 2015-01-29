@@ -100,7 +100,7 @@ namespace CSharping
             CollectionAssert.Contains(messages, "work A");
             CollectionAssert.Contains(messages, "work B");
             CollectionAssert.DoesNotContain(messages, "work C");
-            CollectionAssert.DoesNotContain(messages, "work D");
+            // task D will get finished if it was already started as the break was made
         }
 
         private void DoWorkBreakOnNameC(string name, MessageQueue queue, ParallelLoopState state)
