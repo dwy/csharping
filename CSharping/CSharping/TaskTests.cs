@@ -163,7 +163,7 @@ namespace CSharping
         }
 
         [Test]
-        public async void TaskWaitOnACanceledTask_ThrowsAggregateException()
+        public void TaskWaitOnACanceledTask_ThrowsAggregateException()
         {
             var cancelSource = new CancellationTokenSource();
             var token = cancelSource.Token;
