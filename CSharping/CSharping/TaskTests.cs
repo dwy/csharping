@@ -212,6 +212,17 @@ namespace CSharping
             Assert.AreEqual("continuation after first", messages[1]);
         }
 
+        [Test]
+        public async void Continuation_AntecedentThrows_ContinuationHasAccessToException()
+        {
+            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+            Task<AggregateException> continuation = first.ContinueWith(antecedentTask =>  antecedentTask.Exception);
+
+            AggregateException ex = continuation.Result;
+            Assert.AreEqual("antecedent failed", ex.InnerException.Message);
+        }
+
+
         private string DoWork(string name, MessageQueue queue)
         {
             queue.AddMessage(name);
