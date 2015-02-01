@@ -213,7 +213,7 @@ namespace CSharping
         }
 
         [Test]
-        public async void Continuation_AntecedentThrows_ContinuationHasAccessToException()
+        public void Continuation_AntecedentThrows_ContinuationHasAccessToException()
         {
             Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
             Task<AggregateException> continuation = first.ContinueWith(antecedentTask =>  antecedentTask.Exception);
@@ -222,6 +222,40 @@ namespace CSharping
             Assert.AreEqual("antecedent failed", ex.InnerException.Message);
         }
 
+        [Test]
+        public async void Continuation_AntecedentThrows_ErrorContinuationIsExecuted()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+
+            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
+                                             TaskContinuationOptions.OnlyOnFaulted);
+
+            Task success = first.ContinueWith(ant => DoWork("success", queue),
+                                          TaskContinuationOptions.NotOnFaulted);
+
+            await error;
+
+            var messages = queue.GetAll();
+            Assert.AreNotEqual(TaskStatus.RanToCompletion, success.Status);
+            Assert.AreEqual("antecedent failed", messages[0]);
+        }
+
+        [Test]
+        [ExpectedException(typeof(TaskCanceledException))]
+        public async void Continuation_AntecedentThrows_SuccessContinuationIsCanceled()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+
+            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
+                                             TaskContinuationOptions.OnlyOnFaulted);
+
+            Task success = first.ContinueWith(antecedentTask => DoWork("success", queue),
+                                          TaskContinuationOptions.NotOnFaulted);
+
+            await success;
+        }
 
         private string DoWork(string name, MessageQueue queue)
         {
