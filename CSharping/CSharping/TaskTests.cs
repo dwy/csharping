@@ -215,7 +215,7 @@ namespace CSharping
         [Test]
         public void Continuation_AntecedentThrows_ContinuationHasAccessToException()
         {
-            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+            Task first = Task.Factory.StartNew(() => { ThrowException("antecedent failed"); });
             Task<AggregateException> continuation = first.ContinueWith(antecedentTask =>  antecedentTask.Exception);
 
             AggregateException ex = continuation.Result;
@@ -226,7 +226,7 @@ namespace CSharping
         public async void Continuation_AntecedentThrows_ErrorContinuationIsExecuted()
         {
             var queue = new MessageQueue();
-            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+            Task first = Task.Factory.StartNew(() => { ThrowException("antecedent failed"); });
 
             Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
                                              TaskContinuationOptions.OnlyOnFaulted);
@@ -246,7 +246,7 @@ namespace CSharping
         public async void Continuation_AntecedentThrows_SuccessContinuationIsCanceled()
         {
             var queue = new MessageQueue();
-            Task first = Task.Factory.StartNew(() => { throw new Exception("antecedent failed"); });
+            Task first = Task.Factory.StartNew(() => { ThrowException("antecedent failed"); });
 
             Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
                                              TaskContinuationOptions.OnlyOnFaulted);
@@ -255,6 +255,41 @@ namespace CSharping
                                           TaskContinuationOptions.NotOnFaulted);
 
             await success;
+        }
+
+        [Test]
+        public async void Continuation_AntecedentSucceeds_SuccessContinuationIsExecuted()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => { DoWork("antecedent succeeded", queue); });
+
+            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
+                                             TaskContinuationOptions.OnlyOnFaulted);
+
+            Task success = first.ContinueWith(ant => DoWork("success", queue),
+                                          TaskContinuationOptions.NotOnFaulted);
+
+            await success;
+
+            var messages = queue.GetAll();
+            Assert.AreNotEqual(TaskStatus.RanToCompletion, error.Status);
+            Assert.AreEqual("antecedent succeeded", messages[0]);
+        }
+
+        [Test]
+        [ExpectedException(typeof(TaskCanceledException))]
+        public async void Continuation_AntecedentSucceeds_ErrorContinuationIsCanceled()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => { DoWork("antecedent succeeded", queue); });
+
+            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
+                                             TaskContinuationOptions.OnlyOnFaulted);
+
+            Task success = first.ContinueWith(antecedentTask => DoWork("success", queue),
+                                          TaskContinuationOptions.NotOnFaulted);
+
+            await error;
         }
 
         private string DoWork(string name, MessageQueue queue)
