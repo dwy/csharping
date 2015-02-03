@@ -163,7 +163,7 @@ namespace CSharping
         }
 
         [Test]
-        public void TaskWaitOnACanceledTask_ThrowsAggregateException()
+        public void WaitOnACanceledTask_ThrowsAggregateException()
         {
             var cancelSource = new CancellationTokenSource();
             var token = cancelSource.Token;
@@ -228,8 +228,14 @@ namespace CSharping
             var queue = new MessageQueue();
             Task first = Task.Factory.StartNew(() => { ThrowException("antecedent failed"); });
 
-            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
-                                             TaskContinuationOptions.OnlyOnFaulted);
+            Task error = first.ContinueWith(antecedentTask =>
+            {
+                var ex = antecedentTask.Exception;
+                if (ex != null)
+                {
+                    DoWork(ex.InnerException.Message, queue);
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
 
             Task success = first.ContinueWith(ant => DoWork("success", queue),
                                           TaskContinuationOptions.NotOnFaulted);
@@ -248,13 +254,20 @@ namespace CSharping
             var queue = new MessageQueue();
             Task first = Task.Factory.StartNew(() => { ThrowException("antecedent failed"); });
 
-            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
-                                             TaskContinuationOptions.OnlyOnFaulted);
+            Task error = first.ContinueWith(antecedentTask =>
+            {
+                var ex = antecedentTask.Exception;
+                if (ex != null)
+                {
+                    DoWork(ex.InnerException.Message, queue);  
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
 
             Task success = first.ContinueWith(antecedentTask => DoWork("success", queue),
                                           TaskContinuationOptions.NotOnFaulted);
 
             await success;
+            await error;
         }
 
         [Test]
@@ -263,8 +276,14 @@ namespace CSharping
             var queue = new MessageQueue();
             Task first = Task.Factory.StartNew(() => { DoWork("antecedent succeeded", queue); });
 
-            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
-                                             TaskContinuationOptions.OnlyOnFaulted);
+            Task error = first.ContinueWith(antecedentTask =>
+            {
+                var ex = antecedentTask.Exception;
+                if (ex != null)
+                {
+                    DoWork(ex.InnerException.Message, queue);   
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
 
             Task success = first.ContinueWith(ant => DoWork("success", queue),
                                           TaskContinuationOptions.NotOnFaulted);
@@ -283,14 +302,23 @@ namespace CSharping
             var queue = new MessageQueue();
             Task first = Task.Factory.StartNew(() => { DoWork("antecedent succeeded", queue); });
 
-            Task error = first.ContinueWith(antecedentTask => DoWork(antecedentTask.Exception.InnerException.Message, queue),
-                                             TaskContinuationOptions.OnlyOnFaulted);
+            Task error = first.ContinueWith(antecedentTask =>
+            {
+                var ex = antecedentTask.Exception;
+                if (ex != null)
+                {
+                    DoWork(ex.InnerException.Message, queue); 
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
 
             Task success = first.ContinueWith(antecedentTask => DoWork("success", queue),
                                           TaskContinuationOptions.NotOnFaulted);
 
             await error;
+            await success;
         }
+
+        // Conditional continuations
 
         private string DoWork(string name, MessageQueue queue)
         {
