@@ -313,12 +313,52 @@ namespace CSharping
 
             Task success = first.ContinueWith(antecedentTask => DoWork("success", queue),
                                           TaskContinuationOptions.NotOnFaulted);
-
             await error;
             await success;
         }
 
-        // Conditional continuations
+        [Test]
+        public void ConditionalContinuation_OnlyOnFaultedIsCanceled_ContinuationIsAlwaysExecuted()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => DoWork("first", queue));
+            Task fault = first.ContinueWith(ant => DoWork("on fault canceled because first succeeded", queue), 
+                TaskContinuationOptions.OnlyOnFaulted);
+            Task afterFault = fault.ContinueWith(ant => DoWork("after fault", queue));
+
+            afterFault.Wait();
+
+            var messages = queue.GetAll();
+            Assert.AreEqual("first", messages[0]);
+            Assert.AreEqual("after fault", messages[1]);
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, first.Status);
+            Assert.AreEqual(TaskStatus.Canceled, fault.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, afterFault.Status);
+        }
+
+        [Test]
+        public void ConditionalContinuation_OnlyOnFaultedIsCanceled_ContinuationIsExecutedNotOnCanceled()
+        {
+            var queue = new MessageQueue();
+            Task first = Task.Factory.StartNew(() => DoWork("first", queue));
+
+            Task fault = first.ContinueWith(ant => DoWork("on fault canceled because first succeeded", queue), 
+                TaskContinuationOptions.OnlyOnFaulted);
+
+            Task afterFault = fault.ContinueWith(ant => DoWork("after fault only", queue), TaskContinuationOptions.NotOnCanceled);
+
+
+            first.Wait();
+
+
+            var messages = queue.GetAll();
+            Assert.AreEqual("first", messages[0]);
+            Assert.AreEqual(TaskStatus.RanToCompletion, first.Status);
+            Assert.AreEqual(TaskStatus.Canceled, fault.Status);
+            Assert.AreEqual(TaskStatus.Canceled, afterFault.Status);
+        }
+
 
         private string DoWork(string name, MessageQueue queue)
         {
