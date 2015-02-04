@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 
 namespace CSharping
@@ -71,6 +72,23 @@ namespace CSharping
 
             Assert.AreEqual(25000, evenNumbersLargerThan50000.Length);
         }
+
+        [Test]
+        public void ThreadLocal_ForNonThreadSafeClasses()
+        {
+            // class Random is not thread safe; use a new instance on each thread.
+            var localRandom = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+            int[] numbers = Enumerable.Range(1, 100000).ToArray();
+
+
+            var randomNumbers = Enumerable.Range(0, 100)
+                .AsParallel()
+                .Select(n => numbers[localRandom.Value.Next(0, numbers.Length)])
+                .ToArray();
+
+            Assert.AreEqual(100, randomNumbers.Length);
+        }
+
 
     }
 }
