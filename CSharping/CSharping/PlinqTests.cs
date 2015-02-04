@@ -28,13 +28,31 @@ namespace CSharping
         {
             IEnumerable<int> numbers = Enumerable.Range(1, 100000);
 
-            ParallelQuery<int> parallelQuery =
-                numbers.AsParallel().Where(n => n % 2 == 0)
-                    .Select(n => n);
+            ParallelQuery<int> parallelQuery = numbers
+                .AsParallel()
+                .Where(n => n % 2 == 0)
+                .Select(n => n);
 
             int[] evenNumbers = parallelQuery.ToArray();
 
             Assert.AreEqual(50000, evenNumbers.Length);
+        }
+
+        [Test]
+        public void AsParallel_LinqMethodChain_AsSequential()
+        {
+            IEnumerable<int> numbers = Enumerable.Range(1, 100000);
+
+            IEnumerable<int> sequentialEnumeration = numbers
+                .AsParallel()
+                .Where(n => n % 2 == 0)
+                .AsSequential()
+                .Where(n => n % 4 == 0)
+                .Select(n => n);
+
+            int[] evenNumbers = sequentialEnumeration.ToArray();
+
+            Assert.AreEqual(25000, evenNumbers.Length);
         }
     }
 }
