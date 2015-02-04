@@ -22,5 +22,19 @@ namespace CSharping
 
             Assert.AreEqual(50000, evenNumbers.Length);
         }
+
+        [Test]
+        public void AsParallel_LinqMethodChain()
+        {
+            IEnumerable<int> numbers = Enumerable.Range(1, 100000);
+
+            ParallelQuery<int> parallelQuery =
+                numbers.AsParallel().Where(n => n % 2 == 0)
+                    .Select(n => n);
+
+            int[] evenNumbers = parallelQuery.ToArray();
+
+            Assert.AreEqual(50000, evenNumbers.Length);
+        }
     }
 }
