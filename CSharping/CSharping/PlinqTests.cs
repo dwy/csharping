@@ -54,5 +54,23 @@ namespace CSharping
 
             Assert.AreEqual(25000, evenNumbers.Length);
         }
+
+        [Test]
+        public void UNIT_SCENARIO_RESULT()
+        {
+            IEnumerable<int> numbers = Enumerable.Range(1, 100000).Reverse();
+
+            ParallelQuery<int> parallelQuery = numbers.AsParallel()
+                .AsOrdered() // needed to preserve ordering in a parallel query. Incurs performance hit.
+                .TakeWhile(n => n > 50000)
+                .AsUnordered()
+                .Where(n => n%2 == 0)
+                .Select(n => n);
+
+            int[] evenNumbersLargerThan50000 = parallelQuery.ToArray();
+
+            Assert.AreEqual(25000, evenNumbersLargerThan50000.Length);
+        }
+
     }
 }
