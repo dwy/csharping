@@ -62,7 +62,7 @@ namespace CSharping
 
             ParallelQuery<int> parallelQuery = numbers.AsParallel()
                 .AsOrdered() // needed to preserve ordering in a parallel query. Incurs performance hit.
-                .TakeWhile(n => n > 50000)
+                .TakeWhile(n => n > 50000) // cannot be parallelized unless elements ordered
                 .AsUnordered()
                 .Where(n => n%2 == 0)
                 .Select(n => n);
