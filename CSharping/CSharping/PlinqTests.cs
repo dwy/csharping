@@ -56,7 +56,7 @@ namespace CSharping
         }
 
         [Test]
-        public void UNIT_SCENARIO_RESULT()
+        public void AsOrdered()
         {
             IEnumerable<int> numbers = Enumerable.Range(1, 100000).Reverse();
 
