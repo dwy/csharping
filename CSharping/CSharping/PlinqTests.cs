@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CSharping
@@ -92,7 +93,7 @@ namespace CSharping
         [Test]
         public void WithDegreeOfParallelism()
         {
-            int[] numbers = Enumerable.Range(1, 100000).ToArray();
+            IEnumerable<int> numbers = Enumerable.Range(1, 100000);
 
             var filteredNumbers = numbers
                 .AsParallel()
@@ -102,5 +103,28 @@ namespace CSharping
             
             Assert.AreEqual(9, filteredNumbers.Length);
         }
+
+        [Test]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public void WithCancellation_ThrowsWhenCanceled()
+        {
+            var cancellationSource = new CancellationTokenSource();
+            IEnumerable<int> numbers = Enumerable.Range(1, 1000000);
+
+            var queryToCancel = numbers
+                .AsParallel()
+                .WithCancellation(cancellationSource.Token)
+                .Where(n => n*n < n + n)    // give the parallel tasks something to compute
+                .Select(n => Math.Sqrt(n));
+
+            new Thread(() =>
+            {
+                Thread.Sleep(10);
+                cancellationSource.Cancel();
+            }).Start();
+
+            queryToCancel.ToArray();
+        }
+
     }
 }
