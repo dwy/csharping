@@ -60,6 +60,7 @@
     <Compile Include="PlinqTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskTests.cs" />
+    <Compile Include="ThreadPoolTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
