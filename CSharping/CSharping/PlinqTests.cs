@@ -89,6 +89,18 @@ namespace CSharping
             Assert.AreEqual(100, randomNumbers.Length);
         }
 
+        [Test]
+        public void WithDegreeOfParallelism()
+        {
+            int[] numbers = Enumerable.Range(1, 100000).ToArray();
 
+            var filteredNumbers = numbers
+                .AsParallel()
+                .WithDegreeOfParallelism(6) // runs 6 tasks simultaneously
+                .Where(n => n < 10)
+                .ToArray();
+            
+            Assert.AreEqual(9, filteredNumbers.Length);
+        }
     }
 }
