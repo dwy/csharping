@@ -126,5 +126,12 @@ namespace CSharping
             queryToCancel.ToArray();
         }
 
+        [Test]
+        public void WhenNeedToEnumerateParallelResult_OrderIsNotImportant_UseForAll()
+        {
+            IEnumerable<int> numbers = Enumerable.Range(1, 100000);
+
+            numbers.AsParallel().Select(n => Math.Sinh(n)).ForAll(n => { /* do stuff */ ;});
+        }
     }
 }
