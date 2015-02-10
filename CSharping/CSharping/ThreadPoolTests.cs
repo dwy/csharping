@@ -15,6 +15,22 @@ namespace CSharping
             ThreadPool.QueueUserWorkItem(DoWork, "stuff");
         }
 
+        [Test]
+        public void AsynchronousDelegate()
+        {
+            Func<string, string> func = DoWork;
+            IAsyncResult asyncResult = func.BeginInvoke("func", null, null);
+
+            string result = func.EndInvoke(asyncResult);
+
+            Assert.AreEqual("func finished", result);
+        }
+
+        private string DoWork(string input)
+        {
+            return input + " finished";
+        }
+
         private void DoWork(object state)
         {
 
