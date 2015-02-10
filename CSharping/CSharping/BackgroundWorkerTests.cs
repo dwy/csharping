@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using NUnit.Framework;
 
 namespace CSharping
@@ -10,21 +11,35 @@ namespace CSharping
         public void BackgroundWorker()
         {
             var worker = new BackgroundWorker();
-            worker.DoWork += DoWork;
-            worker.RunWorkerCompleted += OnRunWorkerCompleted;
+            worker.DoWork += (sender, args) =>
+            {
+                args.Result = args.Argument + " finished";
+            };
+            
+            worker.RunWorkerCompleted += (sender1, args1) => Assert.AreEqual("work finished", args1.Result);
 
             worker.RunWorkerAsync("work");
         }
 
-        private void DoWork(object sender, DoWorkEventArgs args)
+        [Test]
+        public void BackgroundWorker_ReportsProgress()
         {
-            args.Result = args.Argument + " finished";
+            var worker = new BackgroundWorker { WorkerReportsProgress = true };
+            worker.DoWork += DoWorkWithProgressReport;
+            worker.ProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage + "% finished");
+            worker.RunWorkerCompleted += (sender1, args1) => Assert.AreEqual("work in progress finished with 100%", args1.Result);
+
+            worker.RunWorkerAsync("work in progress");
         }
 
-        private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
+        private void DoWorkWithProgressReport(object sender, DoWorkEventArgs args)
         {
-            string result = (string) args.Result;
-            Assert.AreEqual("work finished", result);
+            var worker = (BackgroundWorker) sender;
+            for (int i = 0; i <= 10; i++)
+            {
+                worker.ReportProgress(i * 10);
+            }
+            args.Result = string.Format("{0} finished with 100%", args.Argument);
         }
     }
 }
