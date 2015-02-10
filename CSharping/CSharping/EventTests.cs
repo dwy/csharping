@@ -11,10 +11,10 @@ namespace CSharping
     public class EventTests
     {
         [Test]
-        public void SimpleEvent()
+        public void SimpleEvent_RegisterDelegate()
         {
             var classWithEvent = new ClassWithEvent();
-            classWithEvent.OnRunning += delegate(object sender, string message, EventArgs args)
+            classWithEvent.WasRun += delegate(object sender, string message, EventArgs args)
             {
                 Assert.AreEqual("run with message", message);
             };
@@ -22,13 +22,45 @@ namespace CSharping
             classWithEvent.Run("run with message");
         }
 
+        [Test]
+        public void SimpleEvent_RegisterLambda()
+        {
+            var classWithEvent = new ClassWithEvent();
+            classWithEvent.WasRun += (sender, message, args) => Assert.AreEqual("run with message", message);
+
+            classWithEvent.Run("run with message");
+        }
+
+        [Test]
+        public void SimpleEvent_RegisterNamedMethod()
+        {
+            var classWithEvent = new ClassWithEvent();
+            classWithEvent.WasRun += WasRunEventHandler;
+
+            classWithEvent.Run("run with message");
+        }
+
+        [Test]
+        public void SimpleEvent_RegisterNewEventHandler()
+        {
+            var classWithEvent = new ClassWithEvent();
+            classWithEvent.WasRun += new RunningEventHandler(WasRunEventHandler);
+
+            classWithEvent.Run("run with message");
+        }
+
+        private void WasRunEventHandler(object sender, string message, EventArgs args)
+        {
+            Assert.AreEqual("run with message", message);
+        }
+
         sealed class ClassWithEvent
         {
-            public event RunningEventHandler OnRunning;
+            public event RunningEventHandler WasRun;
 
             public void Run(string message)
             {
-                var handler = OnRunning;
+                var handler = WasRun;
                 if (handler != null) handler(this, message, EventArgs.Empty);
             }
         }
