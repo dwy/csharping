@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BackgroundWorkerTests.cs" />
     <Compile Include="MessageQueue.cs" />
     <Compile Include="AsyncTests.cs" />
     <Compile Include="ParallelTests.cs" />
