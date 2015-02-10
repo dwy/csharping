@@ -26,9 +26,28 @@ namespace CSharping
             Assert.AreEqual("func finished", result);
         }
 
+        [Test]
+        public void AsynchronousDelegate_WithCallBack()
+        {
+            Func<string, string> func = DoWork;
+            var queue = new MessageQueue();
+            IAsyncResult asyncResult = func.BeginInvoke("func", DoneCallBack, queue);
+
+            string result = func.EndInvoke(asyncResult);
+
+            Assert.AreEqual("func finished", result);
+            // callback may still be running at this point
+        }
+
         private string DoWork(string input)
         {
             return input + " finished";
+        }
+
+        private void DoneCallBack(IAsyncResult result)
+        {
+            var queue = (MessageQueue) result.AsyncState;
+            queue.AddMessage("done callback called");
         }
 
         private void DoWork(object state)
