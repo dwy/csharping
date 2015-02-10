@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using NUnit.Framework;
 
 namespace CSharping
@@ -40,6 +41,34 @@ namespace CSharping
                 worker.ReportProgress(i * 10);
             }
             args.Result = string.Format("{0} finished with 100%", args.Argument);
+        }
+
+        [Test]
+        public void BackgroundWorker_SupportsCancellation()
+        {
+            var worker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            worker.DoWork += DoWorkWithCancellation;
+            worker.ProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage + "% finished");
+            worker.RunWorkerCompleted += (sender, args) => Assert.IsTrue(args.Cancelled);
+
+            worker.RunWorkerAsync("work to cancel");
+
+            worker.CancelAsync();
+        }
+
+        private void DoWorkWithCancellation(object sender, DoWorkEventArgs args)
+        {
+            var worker = (BackgroundWorker) sender;
+            for (int i = 0; i < 10; i++)
+            {
+                if (worker.CancellationPending)
+                {
+                    args.Cancel = true;
+                    return;
+                }
+                Thread.Sleep(100);
+            }
+            args.Result = args.Argument + " finished";
         }
     }
 }
