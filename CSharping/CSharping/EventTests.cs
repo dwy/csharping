@@ -11,7 +11,7 @@ namespace CSharping
     public class EventTests
     {
         [Test]
-        public void SimpleEvent_RegisterDelegate()
+        public void Event_RegisterDelegate()
         {
             var classWithEvent = new ClassWithEvent();
             classWithEvent.WasRun += delegate(object sender, string message, EventArgs args)
@@ -23,7 +23,7 @@ namespace CSharping
         }
 
         [Test]
-        public void SimpleEvent_RegisterLambda()
+        public void Event_RegisterLambda()
         {
             var classWithEvent = new ClassWithEvent();
             classWithEvent.WasRun += (sender, message, args) => Assert.AreEqual("run with message", message);
@@ -32,7 +32,7 @@ namespace CSharping
         }
 
         [Test]
-        public void SimpleEvent_RegisterNamedMethod()
+        public void Event_RegisterNamedMethod()
         {
             var classWithEvent = new ClassWithEvent();
             classWithEvent.WasRun += WasRunEventHandler;
@@ -41,12 +41,32 @@ namespace CSharping
         }
 
         [Test]
-        public void SimpleEvent_RegisterNewEventHandler()
+        public void Event_RegisterNewEventHandler()
         {
             var classWithEvent = new ClassWithEvent();
             classWithEvent.WasRun += new RunningEventHandler(WasRunEventHandler);
 
             classWithEvent.Run("run with message");
+        }
+
+        [Test]
+        public void Event_RegisterMultipleEventHandlers()
+        {
+            var classWithEvent = new ClassWithEvent();
+            classWithEvent.WasRun += WasRunEventHandler;
+            classWithEvent.WasRun += WasRunEventHandler;
+
+            classWithEvent.Run("run with message");
+        }
+
+        [Test]
+        public void Event_UnregisterEventHandler_EventIsNull()
+        {
+            var classWithEvent = new ClassWithEvent();
+            classWithEvent.WasRun += WasRunEventHandler;
+            classWithEvent.WasRun -= WasRunEventHandler;
+
+            // classWithEvent.WasRun is now null
         }
 
         private void WasRunEventHandler(object sender, string message, EventArgs args)
@@ -61,7 +81,10 @@ namespace CSharping
             public void Run(string message)
             {
                 var handler = WasRun;
-                if (handler != null) handler(this, message, EventArgs.Empty);
+                if (handler != null)
+                {
+                    handler(this, message, EventArgs.Empty);
+                }
             }
         }
 
