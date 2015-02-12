@@ -97,11 +97,6 @@ namespace CSharping
             return functionDelegate(message);
         }
 
-        private static int GetMessageLength(string m)
-        {
-            return m.Length;
-        }
-
         [Test]
         public void PassBuiltinFunctionDelegateAsParameter()
         {
@@ -113,6 +108,29 @@ namespace CSharping
         private int ExecuteFunction(Func<string, int> functionDelegate, string message)
         {
             return functionDelegate(message);
+        }
+
+        private static int GetMessageLength(string m)
+        {
+            return m.Length;
+        }
+
+        [Test]
+        public void PassBuiltinFunctionDelegateAsParameter_SeveralParameters()
+        {
+            int length = ExecuteFunction(GetTotalLength, "hi", "there", "bob");
+
+            Assert.AreEqual(10, length);
+        }
+
+        private int ExecuteFunction(Func<string, string, string, int> functionDelegate, string message1, string message2, string message3)
+        {
+            return functionDelegate(message1, message2, message3);
+        }
+
+        private int GetTotalLength(string arg1, string arg2, string arg3)
+        {
+            return (arg1 + arg2 + arg3).Length;
         }
     }
 }
