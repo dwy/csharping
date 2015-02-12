@@ -101,5 +101,18 @@ namespace CSharping
         {
             return m.Length;
         }
+
+        [Test]
+        public void PassBuiltinFunctionDelegateAsParameter()
+        {
+            int length = ExecuteFunction(GetMessageLength, "hi");
+
+            Assert.AreEqual(2, length);
+        }
+
+        private int ExecuteFunction(Func<string, int> functionDelegate, string message)
+        {
+            return functionDelegate(message);
+        }
     }
 }
