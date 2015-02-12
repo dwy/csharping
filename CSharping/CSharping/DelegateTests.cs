@@ -12,7 +12,18 @@ namespace CSharping
         public void CallActionDelegate_PassLambda()
         {
             var queue = new MessageQueue();
-            var actionDelegate = new MessageActionDelegate(m => { queue.AddMessage(m); });
+            var actionDelegate = new MessageActionDelegate(m => queue.AddMessage(m));
+
+            actionDelegate("hi");
+
+            Assert.AreEqual("hi", queue.GetAll()[0]);
+        }
+
+        [Test]
+        public void CallActionDelegate_PassMethod()
+        {
+            var queue = new MessageQueue();
+            var actionDelegate = new MessageActionDelegate(queue.AddMessage);
 
             actionDelegate("hi");
 

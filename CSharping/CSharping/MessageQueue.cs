@@ -10,8 +10,13 @@ namespace CSharping
 
         public void AddMessage(string format, params object[] args)
         {
-            _messages.Enqueue(string.Format(format, args));
+            AddMessage(string.Format(format, args));
             // string.Format(" on threadId {0}", Thread.CurrentThread.ManagedThreadId)
+        }
+
+        public void AddMessage(string message)
+        {
+            _messages.Enqueue(message);
         }
 
         public List<string> GetAll()
