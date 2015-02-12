@@ -82,6 +82,21 @@ namespace CSharping
             Assert.AreEqual(2, length);
         }
 
+        [Test]
+        public void PassFunctionDelegateAsParameter()
+        {
+            var functionDelegate = new MessageFunctionDelegate(GetMessageLength);
+
+            int length = ExecuteMessageFunction(functionDelegate, "hi");
+
+            Assert.AreEqual(2, length);
+        }
+
+        private int ExecuteMessageFunction(MessageFunctionDelegate functionDelegate, string message)
+        {
+            return functionDelegate(message);
+        }
+
         private static int GetMessageLength(string m)
         {
             return m.Length;
