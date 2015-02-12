@@ -29,5 +29,21 @@ namespace CSharping
 
             Assert.AreEqual("hi", queue.GetAll()[0]);
         }
+
+        [Test]
+        public void PassActionDelegateAsParameter()
+        {
+            var queue = new MessageQueue();
+            var actionDelegate = new MessageActionDelegate(queue.AddMessage);
+
+            ExecuteMessageAction(actionDelegate, "hi");
+
+            Assert.AreEqual("hi", queue.GetAll()[0]);
+        }
+
+        private static void ExecuteMessageAction(MessageActionDelegate actionDelegate, string message)
+        {
+            actionDelegate(message);
+        }
     }
 }
