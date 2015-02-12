@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace CSharping
 {
@@ -42,6 +43,21 @@ namespace CSharping
         }
 
         private static void ExecuteMessageAction(MessageActionDelegate actionDelegate, string message)
+        {
+            actionDelegate(message);
+        }
+
+        [Test]
+        public void PassBuiltinActionDelegateAsParameter()
+        {
+            var queue = new MessageQueue();
+
+            ExecuteAction(queue.AddMessage, "hi");
+
+            Assert.AreEqual("hi", queue.GetAll()[0]);
+        }
+
+        private static void ExecuteAction(Action<string> actionDelegate, string message)
         {
             actionDelegate(message);
         }
