@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace CSharping
 {
     public delegate void MessageActionDelegate(string message);
-    public delegate string MessageFunctionDelegate(string message);
+    public delegate int MessageFunctionDelegate(string message);
 
     [TestFixture]
     public class DelegateTests
@@ -60,6 +60,22 @@ namespace CSharping
         private static void ExecuteAction(Action<string> actionDelegate, string message)
         {
             actionDelegate(message);
+        }
+
+        [Test]
+        public void CallFunctionDelegate_PassLambda()
+        {
+            var queue = new MessageQueue();
+            var functionDelegate = new MessageFunctionDelegate(m =>
+            {
+                queue.AddMessage(m);
+                return m.Length;
+            });
+
+            int length = functionDelegate("hi");
+
+            Assert.AreEqual(2, length);
+            Assert.AreEqual("hi", queue.GetAll()[0]);
         }
     }
 }
