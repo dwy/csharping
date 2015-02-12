@@ -20,7 +20,7 @@ namespace CSharping
         {
             private readonly int _id;
             private string _value;
-            public const string Name = "DataStruct";
+            public const string Name = "DataStruct"; // can only have const or static field initialisers
             
             // cannot have an explicit parameterless constructor
 
