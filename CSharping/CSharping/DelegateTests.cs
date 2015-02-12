@@ -65,17 +65,26 @@ namespace CSharping
         [Test]
         public void CallFunctionDelegate_PassLambda()
         {
-            var queue = new MessageQueue();
-            var functionDelegate = new MessageFunctionDelegate(m =>
-            {
-                queue.AddMessage(m);
-                return m.Length;
-            });
+            var functionDelegate = new MessageFunctionDelegate(m => m.Length);
 
             int length = functionDelegate("hi");
 
             Assert.AreEqual(2, length);
-            Assert.AreEqual("hi", queue.GetAll()[0]);
+        }
+
+        [Test]
+        public void CallFunctionDelegate_PassFunction()
+        {
+            var functionDelegate = new MessageFunctionDelegate(GetMessageLength);
+
+            int length = functionDelegate("hi");
+
+            Assert.AreEqual(2, length);
+        }
+
+        private static int GetMessageLength(string m)
+        {
+            return m.Length;
         }
     }
 }
