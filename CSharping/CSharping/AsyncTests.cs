@@ -67,7 +67,7 @@ namespace CSharping
 
             queue.AddMessage("starting main");
             Task shortTask = SimulateWorkAsync("short", 10, queue);
-            Task longTask = SimulateWorkAsync("long", 20, queue);
+            Task longTask = SimulateWorkAsync("long", 100, queue);
 
             queue.AddMessage("doing independent work");
 
