@@ -69,5 +69,18 @@ namespace CSharping
                 Value = value;
             }
         }
+
+        [Test]
+        public void StaticInitialisers_OnlyConstAndStaticFields()
+        {
+            Assert.AreEqual("Struct", StructWithFieldInitialisers.Name);
+            Assert.AreEqual(100, StructWithFieldInitialisers.Value);
+        }
+
+        struct StructWithFieldInitialisers
+        {
+            public const string Name = "Struct";
+            public static int Value = 100;
+        }
     }
 }
