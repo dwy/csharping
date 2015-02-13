@@ -2,7 +2,7 @@
 using System.Globalization;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Types
 {
     // https://msdn.microsoft.com/en-us/library/saxz13w4.aspx
 

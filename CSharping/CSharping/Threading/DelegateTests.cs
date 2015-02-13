@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     public delegate void MessageActionDelegate(string message);
     public delegate int MessageFunctionDelegate(string message);

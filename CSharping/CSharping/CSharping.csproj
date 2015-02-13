@@ -54,17 +54,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BackgroundWorkerTests.cs" />
-    <Compile Include="DelegateTests.cs" />
-    <Compile Include="EventTests.cs" />
-    <Compile Include="MessageQueue.cs" />
-    <Compile Include="AsyncTests.cs" />
-    <Compile Include="ParallelTests.cs" />
-    <Compile Include="PlinqTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StructTests.cs" />
-    <Compile Include="TaskTests.cs" />
-    <Compile Include="ThreadPoolTests.cs" />
+    <Compile Include="Threading\BackgroundWorkerTests.cs" />
+    <Compile Include="Threading\DelegateTests.cs" />
+    <Compile Include="Threading\EventTests.cs" />
+    <Compile Include="Threading\MessageQueue.cs" />
+    <Compile Include="Threading\ParallelTests.cs" />
+    <Compile Include="Threading\PlinqTests.cs" />
+    <Compile Include="Threading\TaskTests.cs" />
+    <Compile Include="Threading\ThreadPoolTests.cs" />
+    <Compile Include="Types\EnumTests.cs" />
+    <Compile Include="Types\StructTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

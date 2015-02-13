@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Types
 {
     // https://msdn.microsoft.com/en-us/library/cc138362.aspx
 

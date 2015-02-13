@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     [TestFixture]
     public class BackgroundWorkerTests

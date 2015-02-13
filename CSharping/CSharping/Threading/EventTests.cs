@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     // https://msdn.microsoft.com/en-us/library/aa645739%28v=vs.71%29.aspx
     

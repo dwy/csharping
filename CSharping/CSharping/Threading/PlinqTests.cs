@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     [TestFixture]
     public class PlinqTests

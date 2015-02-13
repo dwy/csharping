@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     [TestFixture]
     public class TaskTests

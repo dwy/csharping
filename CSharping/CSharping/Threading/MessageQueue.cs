@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     public class MessageQueue
     {

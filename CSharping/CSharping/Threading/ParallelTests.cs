@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using NUnit.Framework;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
-namespace CSharping
+namespace CSharping.Threading
 {
     [TestFixture]
     public class ParallelTests
