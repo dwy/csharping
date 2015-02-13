@@ -10,12 +10,21 @@ namespace CSharping
     public class StructTests
     {
         [Test]
-        public void Instantiate_WithNewKeyword()
+        public void Instantiate_WithNewKeyword_WithParameters()
         {
             var data = new DataStruct(1, "Bob");
 
             Assert.AreEqual(1, data.Id);
             Assert.AreEqual("Bob", data.Value);
+        }
+
+        [Test]
+        public void Instantiate_WithNewKeyword_WithoutParameters_DefaultValues()
+        {
+            var data = new DataStruct();
+
+            Assert.AreEqual(0, data.Id);
+            Assert.IsNull(data.Value);
         }
 
         struct DataStruct
@@ -75,6 +84,9 @@ namespace CSharping
             DataStruct s2 = s1;
 
             s2.Value = "Bob";
+
+            Assert.AreNotSame(s1, s2);
+            Assert.AreNotEqual(s1, s2);
 
             Assert.AreEqual(1, s1.Id);
             Assert.AreEqual("Alice", s1.Value);
