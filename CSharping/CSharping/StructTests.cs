@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace CSharping
 {
@@ -20,7 +21,6 @@ namespace CSharping
         {
             public int Id;
             public string Value;
-            public const string Name = "DataStruct"; // can only have const or static field initialisers
             
             // cannot have an explicit parameterless constructor
 
@@ -77,10 +77,19 @@ namespace CSharping
             Assert.AreEqual(100, StructWithFieldInitialisers.Value);
         }
 
+        // fields initialisers must be const or static
         struct StructWithFieldInitialisers
         {
             public const string Name = "Struct";
             public static int Value = 100;
+        }
+
+        [Test]
+        public void StructsAreValueTypes()
+        {
+            var s = new StructWithValueTypes(1, false, 100);
+
+            Assert.IsInstanceOf<ValueType>(s);
         }
     }
 }
