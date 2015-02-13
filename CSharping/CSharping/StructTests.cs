@@ -90,5 +90,20 @@ namespace CSharping
 
             Assert.IsInstanceOf<ValueType>(s);
         }
+
+        [Test]
+        public void AssignmnentToAVariable_StructIsCopied()
+        {
+            StructWithReferenceType s1 = new StructWithReferenceType(1, "Alice");
+            StructWithReferenceType s2 = s1;
+
+            s2.Value = "Bob";
+
+            Assert.AreEqual(1, s1.Id);
+            Assert.AreEqual("Alice", s1.Value);
+
+            Assert.AreEqual(1, s2.Id);
+            Assert.AreEqual("Bob", s2.Value);
+        }
     }
 }
