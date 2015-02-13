@@ -10,35 +10,63 @@ namespace CSharping
         [Test]
         public void Instantiate_WithNewKeyword()
         {
-            var data = new Data(1, "Bob");
+            var data = new StructWithReferenceType(1, "Bob");
 
             Assert.AreEqual(1, data.Id);
             Assert.AreEqual("Bob", data.Value);
         }
 
-        struct Data
+        struct StructWithReferenceType
         {
-            private readonly int _id;
-            private string _value;
+            public int Id;
+            public string Value;
             public const string Name = "DataStruct"; // can only have const or static field initialisers
             
             // cannot have an explicit parameterless constructor
 
-            public Data(int id, string value)
+            public StructWithReferenceType(int id, string value)
             {
-                _id = id;
-                _value = value;
+                Id = id;
+                Value = value;
             }
+        }
 
-            public int Id
-            {
-                get { return _id; }
-            }
+        [Test]
+        public void Instantiate_StructWithValueTypes_WithoutNewKeyword_NeedToInitialiseAllFields()
+        {
+            StructWithValueTypes structWithValueTypes;
+            structWithValueTypes.Id = 1;
+            structWithValueTypes.ReadOnly = true;
+            structWithValueTypes.Value = 12.34m;
 
-            public string Value
+
+            Assert.AreEqual(1, structWithValueTypes.Id);
+            Assert.AreEqual(true, structWithValueTypes.ReadOnly);
+            Assert.AreEqual(12.34m, structWithValueTypes.Value);
+        }
+
+        [Test]
+        public void Instantiate_StructWithReferenceType_WithoutNewKeyword_NeedToInitialiseAllFields()
+        {
+            StructWithReferenceType structWithReferenceType;
+            structWithReferenceType.Id = 2;
+            structWithReferenceType.Value = "Alice";
+
+            Assert.AreEqual(2, structWithReferenceType.Id);
+            Assert.AreEqual("Alice", structWithReferenceType.Value);
+        }
+
+        struct StructWithValueTypes
+        {
+            public int Id;
+            public bool ReadOnly;
+            public decimal Value;
+
+            public StructWithValueTypes(int id, bool readOnly, decimal value)
             {
-                get { return _value; }
-                set { _value = value; }
+                Id = id;
+                ReadOnly = readOnly;
+                Value = value;
             }
         }
     }
