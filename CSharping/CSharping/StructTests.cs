@@ -121,5 +121,19 @@ namespace CSharping
                 return format;
             }
         }
+
+        [Test]
+        public void StructCanBeUsedAsNullable()
+        {
+            DataStruct? nullStruct = null;
+            Nullable<DataStruct> nonNullStruct = new DataStruct(1, "Dilbert");
+
+
+            Assert.IsNull(nullStruct);
+            Assert.IsFalse(nullStruct.HasValue);
+
+            Assert.IsNotNull(nonNullStruct);
+            Assert.IsTrue(nonNullStruct.HasValue);
+        }
     }
 }
