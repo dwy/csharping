@@ -105,5 +105,22 @@ namespace CSharping
             Assert.AreEqual(1, s2.Id);
             Assert.AreEqual("Bob", s2.Value);
         }
+
+        /*
+         * structs cannot inherit from a struct or a class.
+         * 
+         * compile errors:
+         *
+         * struct DerivedFromStruct : StructWithValueTypes { }
+         * struct DerivedFromClass : String { }
+        */
+
+        struct StructImplementingInterface : IFormattable
+        {
+            public string ToString(string format, IFormatProvider formatProvider)
+            {
+                return string.Empty;
+            }
+        }
     }
 }
