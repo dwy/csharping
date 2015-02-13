@@ -22,7 +22,11 @@ namespace CSharping
             public int Id;
             public string Value;
             
-            // cannot have an explicit parameterless constructor
+            // compile error: structs cannot have an explicit parameterless constructor
+            /* public StructWithReferenceType()
+            {
+                
+            }*/
 
             public StructWithReferenceType(int id, string value)
             {
@@ -36,12 +40,10 @@ namespace CSharping
         {
             StructWithValueTypes structWithValueTypes;
             structWithValueTypes.Id = 1;
-            structWithValueTypes.ReadOnly = true;
             structWithValueTypes.Value = 12.34m;
 
 
             Assert.AreEqual(1, structWithValueTypes.Id);
-            Assert.AreEqual(true, structWithValueTypes.ReadOnly);
             Assert.AreEqual(12.34m, structWithValueTypes.Value);
         }
 
@@ -59,13 +61,11 @@ namespace CSharping
         struct StructWithValueTypes
         {
             public int Id;
-            public bool ReadOnly;
             public decimal Value;
 
-            public StructWithValueTypes(int id, bool readOnly, decimal value)
+            public StructWithValueTypes(int id, decimal value)
             {
                 Id = id;
-                ReadOnly = readOnly;
                 Value = value;
             }
         }
@@ -77,7 +77,6 @@ namespace CSharping
             Assert.AreEqual(100, StructWithFieldInitialisers.Value);
         }
 
-        // fields initialisers must be const or static
         struct StructWithFieldInitialisers
         {
             public const string Name = "Struct";
@@ -87,7 +86,7 @@ namespace CSharping
         [Test]
         public void StructsAreValueTypes()
         {
-            var s = new StructWithValueTypes(1, false, 100);
+            var s = new StructWithValueTypes(1, 100);
 
             Assert.IsInstanceOf<ValueType>(s);
         }
