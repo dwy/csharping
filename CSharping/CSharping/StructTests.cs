@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace CSharping
@@ -36,18 +37,6 @@ namespace CSharping
         }
 
         [Test]
-        public void Instantiate_StructWithValueTypes_WithoutNewKeyword_NeedToInitialiseAllFields()
-        {
-            StructWithValueTypes structWithValueTypes;
-            structWithValueTypes.Id = 1;
-            structWithValueTypes.Value = 12.34m;
-
-
-            Assert.AreEqual(1, structWithValueTypes.Id);
-            Assert.AreEqual(12.34m, structWithValueTypes.Value);
-        }
-
-        [Test]
         public void Instantiate_StructWithReferenceType_WithoutNewKeyword_NeedToInitialiseAllFields()
         {
             StructWithReferenceType structWithReferenceType;
@@ -56,18 +45,6 @@ namespace CSharping
 
             Assert.AreEqual(2, structWithReferenceType.Id);
             Assert.AreEqual("Alice", structWithReferenceType.Value);
-        }
-
-        struct StructWithValueTypes
-        {
-            public int Id;
-            public decimal Value;
-
-            public StructWithValueTypes(int id, decimal value)
-            {
-                Id = id;
-                Value = value;
-            }
         }
 
         [Test]
@@ -86,7 +63,7 @@ namespace CSharping
         [Test]
         public void StructsAreValueTypes()
         {
-            var s = new StructWithValueTypes(1, 100);
+            var s = new StructWithReferenceType(1, "Calvin");
 
             Assert.IsInstanceOf<ValueType>(s);
         }
@@ -115,11 +92,21 @@ namespace CSharping
          * struct DerivedFromClass : String { }
         */
 
+        [Test]
+        public void StructsCanImplementInterfaces()
+        {
+            var s = new StructImplementingInterface();
+
+            string text = s.ToString("format", CultureInfo.InvariantCulture);
+
+            Assert.AreEqual("format", text);
+        }
+
         struct StructImplementingInterface : IFormattable
         {
             public string ToString(string format, IFormatProvider formatProvider)
             {
-                return string.Empty;
+                return format;
             }
         }
     }
