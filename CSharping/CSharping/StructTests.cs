@@ -12,24 +12,24 @@ namespace CSharping
         [Test]
         public void Instantiate_WithNewKeyword()
         {
-            var data = new StructWithReferenceType(1, "Bob");
+            var data = new DataStruct(1, "Bob");
 
             Assert.AreEqual(1, data.Id);
             Assert.AreEqual("Bob", data.Value);
         }
 
-        struct StructWithReferenceType
+        struct DataStruct
         {
             public int Id;
             public string Value;
             
             // compile error: structs cannot have an explicit parameterless constructor
-            /* public StructWithReferenceType()
+            /* public DataStruct()
             {
                 
             }*/
 
-            public StructWithReferenceType(int id, string value)
+            public DataStruct(int id, string value)
             {
                 Id = id;
                 Value = value;
@@ -37,14 +37,14 @@ namespace CSharping
         }
 
         [Test]
-        public void Instantiate_StructWithReferenceType_WithoutNewKeyword_NeedToInitialiseAllFields()
+        public void Instantiate_WithoutNewKeyword_NeedToInitialiseAllFields()
         {
-            StructWithReferenceType structWithReferenceType;
-            structWithReferenceType.Id = 2;
-            structWithReferenceType.Value = "Alice";
+            DataStruct dataStruct;
+            dataStruct.Id = 2;
+            dataStruct.Value = "Alice";
 
-            Assert.AreEqual(2, structWithReferenceType.Id);
-            Assert.AreEqual("Alice", structWithReferenceType.Value);
+            Assert.AreEqual(2, dataStruct.Id);
+            Assert.AreEqual("Alice", dataStruct.Value);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace CSharping
         [Test]
         public void StructsAreValueTypes()
         {
-            var s = new StructWithReferenceType(1, "Calvin");
+            var s = new DataStruct(1, "Calvin");
 
             Assert.IsInstanceOf<ValueType>(s);
         }
@@ -71,8 +71,8 @@ namespace CSharping
         [Test]
         public void AssignmnentToAVariable_StructIsCopied()
         {
-            StructWithReferenceType s1 = new StructWithReferenceType(1, "Alice");
-            StructWithReferenceType s2 = s1;
+            DataStruct s1 = new DataStruct(1, "Alice");
+            DataStruct s2 = s1;
 
             s2.Value = "Bob";
 
