@@ -106,7 +106,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void TryParse_ValidString_ReturnsTrue()
+        public void TryParse_ValidString_ReturnsTrue_EnumValueRetrieved()
         {
             const bool ignoreCase = false;
             AddressType result;
@@ -115,6 +115,18 @@ namespace CSharping.Types
 
             Assert.AreEqual(AddressType.Bill, result);
             Assert.IsTrue(valid);
+        }
+
+        [Test]
+        public void TryParse_InvalidString_ReturnsFalse_DefaultEnumValueRetrieved()
+        {
+            const bool ignoreCase = false;
+            AddressType result;
+
+            bool valid = Enum.TryParse("Invalid value", ignoreCase, out result);
+
+            Assert.AreEqual(AddressType.None, result); // None is default because it is equal zero
+            Assert.IsFalse(valid);
         }
 
         enum AddressType
