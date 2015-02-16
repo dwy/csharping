@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Policy;
 using NUnit.Framework;
 
@@ -59,6 +60,17 @@ namespace CSharping.Types
             Assert.AreEqual(2, intValues[1]);
             Assert.AreEqual(3, intValues[2]);
             Assert.AreEqual(4, intValues[3]);
+        }
+
+        [Test]
+        public void EnumerateNames()
+        {
+            string[] names = Enum.GetNames(typeof (AddressType));
+
+            Assert.AreEqual("None", names[0]);
+            Assert.AreEqual("Payment", names[1]);
+            Assert.AreEqual("Shipment", names[2]);
+            Assert.AreEqual("Bill", names[3]);
         }
 
         enum AddressType
