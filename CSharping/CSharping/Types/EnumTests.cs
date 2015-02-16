@@ -217,5 +217,18 @@ namespace CSharping.Types
             Milk = 0x04,
             Sugar = 0x08
         }
+
+        /*
+         * enums cannot inherit from a enum or a class.
+         * 
+         * compile errors:
+         *
+         *   enum DerivedFromEnum : AddressType { }
+         *   enum DerivedFromClass : String { }
+         * 
+         * enums are sealed:
+         * 
+         *   class DerivedClass : AddressType { }
+        */
     }
 }
