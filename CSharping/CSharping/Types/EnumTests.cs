@@ -91,7 +91,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void ParseString_Valid_ReturnsEnumValue()
+        public void Parse_ValidString_ReturnsEnumValue()
         {
             var billType = (AddressType)Enum.Parse(typeof (AddressType), "Bill");
 
@@ -100,9 +100,21 @@ namespace CSharping.Types
 
         [Test]
         [ExpectedException(typeof (ArgumentException))]
-        public void ParseString_Invalid_Throws()
+        public void Parse_InvalidString_Throws()
         {
             var billType = (AddressType)Enum.Parse(typeof(AddressType), "Invalid value");
+        }
+
+        [Test]
+        public void TryParse_ValidString_ReturnsTrue()
+        {
+            const bool ignoreCase = false;
+            AddressType result;
+
+            bool valid = Enum.TryParse("Bill", ignoreCase, out result);
+
+            Assert.AreEqual(AddressType.Bill, result);
+            Assert.IsTrue(valid);
         }
 
         enum AddressType
