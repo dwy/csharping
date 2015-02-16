@@ -198,6 +198,15 @@ namespace CSharping.Types
             Assert.AreEqual(CoffeeOptions.Milk, enumValue);
         }
 
+        [Test]
+        public void ToObject_CombinedFlags()
+        {
+            var enumValue = (CoffeeOptions)Enum.ToObject(typeof(CoffeeOptions), 12); // 4 + 8
+
+            const CoffeeOptions expected = CoffeeOptions.Milk | CoffeeOptions.Sugar;
+
+            Assert.AreEqual(expected, enumValue);
+        }
 
         [Flags]
         enum CoffeeOptions
