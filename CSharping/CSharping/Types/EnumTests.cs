@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Policy;
 using NUnit.Framework;
 
@@ -29,6 +31,7 @@ namespace CSharping.Types
             Assert.AreEqual(6, saturdayNumber);
         }
 
+
         enum Days
         {
             Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
@@ -44,6 +47,18 @@ namespace CSharping.Types
             Assert.AreEqual(0, noneValue);
             Assert.AreEqual(3, shipmentValue);
             Assert.AreEqual(4, billValue);
+        }
+
+        [Test]
+        public void EnumerateValues()
+        {
+            Array values = Enum.GetValues(typeof (AddressType));
+            var intValues = values.Cast<int>().ToList();
+
+            Assert.AreEqual(0, intValues[0]);
+            Assert.AreEqual(2, intValues[1]);
+            Assert.AreEqual(3, intValues[2]);
+            Assert.AreEqual(4, intValues[3]);
         }
 
         enum AddressType
@@ -103,7 +118,6 @@ namespace CSharping.Types
             bool hasSugar = (options & CoffeeOptions.Sugar) == CoffeeOptions.Sugar;
             Assert.IsFalse(hasSugar);
         }
-
 
         [Flags]
         enum CoffeeOptions
