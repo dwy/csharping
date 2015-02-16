@@ -90,6 +90,15 @@ namespace CSharping.Types
             Assert.AreEqual("Payment", name);
         }
 
+        [Test]
+        public void ParseString_Valid_ReturnsEnumValue()
+        {
+            var billType = (AddressType)Enum.Parse(typeof (AddressType), "Bill");
+
+            Assert.AreEqual(AddressType.Bill, billType);
+        }
+
+
         enum AddressType
         {
             None = 0, Payment = 2, Shipment, Bill
