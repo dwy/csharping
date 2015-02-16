@@ -32,6 +32,13 @@ namespace CSharping.Types
             Assert.AreEqual(6, saturdayNumber);
         }
 
+        [Test]
+        public void DefaultUnderlyingTypeIsInt()
+        {
+            Type underlyingType = Enum.GetUnderlyingType(typeof (Days));
+
+            Assert.AreEqual(typeof (int), underlyingType);
+        }
 
         enum Days
         {
@@ -83,7 +90,10 @@ namespace CSharping.Types
         {
             const byte codeMonkeyValue = (byte)EmployeeType.CodeMonkey;
 
+            Type underlyingType = Enum.GetUnderlyingType(typeof (EmployeeType));
+
             Assert.AreEqual(128, codeMonkeyValue);
+            Assert.AreEqual(typeof(byte), underlyingType);
         }
 
         enum EmployeeType : byte
