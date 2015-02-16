@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -60,7 +61,7 @@ namespace CSharping.Types
 
         enum EmployeeType : byte
         {
-            CodeMonkey = 128, Manager = 255   
+            CodeMonkey = 128, Manager = 255
         }
 
         [Test]
@@ -76,6 +77,20 @@ namespace CSharping.Types
             Assert.AreEqual(6, (int)options);
 
             Assert.AreEqual((int)options, (int)longOption + (int)milkOption);
+        }
+
+        [Test]
+        public void Flags_BitwiseAnd()
+        {
+            const CoffeeOptions options = CoffeeOptions.Short | CoffeeOptions.Sugar | CoffeeOptions.Milk;
+
+            const bool isShort = (options & CoffeeOptions.Short) == CoffeeOptions.Short;
+            const bool isLong = (options & CoffeeOptions.Long) == CoffeeOptions.Long;
+            const bool hasMilk = (options & CoffeeOptions.Milk) == CoffeeOptions.Milk;
+
+            Assert.IsTrue(isShort);
+            Assert.IsFalse(isLong);
+            Assert.IsTrue(hasMilk);
         }
 
         [Flags]
