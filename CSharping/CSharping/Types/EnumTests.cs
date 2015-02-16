@@ -62,5 +62,29 @@ namespace CSharping.Types
         {
             CodeMonkey = 128, Manager = 255   
         }
+
+        [Test]
+        public void Flags_BitwiseOr()
+        {
+            const CoffeeOptions options = CoffeeOptions.Long | CoffeeOptions.Milk;
+            const CoffeeOptions longOption = CoffeeOptions.Long;
+            const CoffeeOptions milkOption = CoffeeOptions.Milk;
+
+            Assert.AreEqual(2, (int)longOption);
+            Assert.AreEqual(4, (int)milkOption);
+            Assert.AreEqual(6, (int)options);
+
+            Assert.AreEqual((int)options, (int)longOption + (int)milkOption);
+        }
+
+        [Flags]
+        enum CoffeeOptions
+        {
+            None = 0x0,     // each value should have a different bit set
+            Short = 0x01,
+            Long = 0x02,
+            Milk = 0x04,
+            Sugar = 0x08
+        }
     }
 }
