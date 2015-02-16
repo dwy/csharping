@@ -93,6 +93,16 @@ namespace CSharping.Types
             Assert.IsTrue(hasMilk);
         }
 
+        [Test]
+        public void Flags_RemoveFlag_BitwiseXor()
+        {
+            CoffeeOptions options = CoffeeOptions.Short | CoffeeOptions.Sugar | CoffeeOptions.Milk;
+
+            options = options ^ CoffeeOptions.Sugar;
+            bool hasSugar = (options & CoffeeOptions.Sugar) == CoffeeOptions.Milk;
+
+            Assert.IsFalse(hasSugar);
+        }
 
 
         [Flags]
