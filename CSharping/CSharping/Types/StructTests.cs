@@ -100,9 +100,14 @@ namespace CSharping.Types
          * 
          * compile errors:
          *
-         * struct DerivedFromStruct : StructWithValueTypes { }
-         * struct DerivedFromClass : String { }
+         *   struct DerivedFromStruct : StructWithValueTypes { }
+         *   struct DerivedFromClass : String { }
+         * 
+         * structs are sealed:
+         * 
+         *   class DerivedClass : DataStruct { }
         */
+
 
         [Test]
         public void StructsCanImplementInterfaces()
