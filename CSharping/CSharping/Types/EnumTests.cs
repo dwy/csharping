@@ -66,9 +66,10 @@ namespace CSharping.Types
         [Test]
         public void Flags_BitwiseOr()
         {
-            const CoffeeOptions options = CoffeeOptions.Long | CoffeeOptions.Milk;
             const CoffeeOptions longOption = CoffeeOptions.Long;
             const CoffeeOptions milkOption = CoffeeOptions.Milk;
+            // 0110 = 0010 + 0100
+            const CoffeeOptions options = CoffeeOptions.Long | CoffeeOptions.Milk;
 
             Assert.AreEqual(2, (int)longOption);
             Assert.AreEqual(4, (int)milkOption);
