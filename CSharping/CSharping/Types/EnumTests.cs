@@ -201,9 +201,9 @@ namespace CSharping.Types
         [Test]
         public void ToObject_CombinedFlags()
         {
-            var enumValue = (CoffeeOptions)Enum.ToObject(typeof(CoffeeOptions), 12); // 4 + 8
-
             const CoffeeOptions expected = CoffeeOptions.Milk | CoffeeOptions.Sugar;
+            
+            var enumValue = (CoffeeOptions)Enum.ToObject(typeof(CoffeeOptions), 12); // 4 + 8
 
             Assert.AreEqual(expected, enumValue);
         }
