@@ -65,7 +65,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void Flags_BitwiseOr()
+        public void Flags_CombineValues_BitwiseOr()
         {
             const CoffeeOptions longOption = CoffeeOptions.Long;
             const CoffeeOptions milkOption = CoffeeOptions.Milk;
@@ -80,7 +80,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void Flags_BitwiseAnd()
+        public void Flags_CheckPresenceOfFlag_BitwiseAnd()
         {
             const CoffeeOptions options = CoffeeOptions.Short | CoffeeOptions.Sugar | CoffeeOptions.Milk;
 
@@ -92,6 +92,8 @@ namespace CSharping.Types
             Assert.IsFalse(isLong);
             Assert.IsTrue(hasMilk);
         }
+
+
 
         [Flags]
         enum CoffeeOptions
