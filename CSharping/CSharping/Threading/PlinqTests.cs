@@ -118,7 +118,7 @@ namespace CSharping.Threading
 
             new Thread(() =>
             {
-                Thread.Sleep(10);
+                Thread.Sleep(1);
                 cancellationSource.Cancel();
             }).Start();
 
