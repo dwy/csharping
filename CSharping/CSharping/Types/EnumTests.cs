@@ -98,6 +98,12 @@ namespace CSharping.Types
             Assert.AreEqual(AddressType.Bill, billType);
         }
 
+        [Test]
+        [ExpectedException(typeof (ArgumentException))]
+        public void ParseString_Invalid_Throws()
+        {
+            var billType = (AddressType)Enum.Parse(typeof(AddressType), "Invalid value");
+        }
 
         enum AddressType
         {
