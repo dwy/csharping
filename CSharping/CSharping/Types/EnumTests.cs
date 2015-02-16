@@ -16,6 +16,16 @@ namespace CSharping.Types
             Assert.IsInstanceOf<ValueType>(day);
         }
 
+        [Test]
+        public void DefaultUnderlyingTypeIsInt_StartsAtZero()
+        {
+            const int sundayNumber = (int) Days.Sunday;
+            const int mondayNumber = (int) Days.Monday;
+
+            Assert.AreEqual(0, sundayNumber);
+            Assert.AreEqual(1, mondayNumber);
+        }
+
         enum Days
         {
             Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
