@@ -80,6 +80,16 @@ namespace CSharping.Types
             Assert.AreEqual("Bill", names[3]);
         }
 
+        [Test]
+        public void GetNameOfAValue()
+        {
+            const AddressType type = AddressType.Payment;
+
+            string name = Enum.GetName(typeof (AddressType), type);
+
+            Assert.AreEqual("Payment", name);
+        }
+
         enum AddressType
         {
             None = 0, Payment = 2, Shipment, Bill
