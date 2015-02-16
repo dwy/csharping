@@ -190,6 +190,15 @@ namespace CSharping.Types
             Assert.IsFalse(hasSugar);
         }
 
+        [Test]
+        public void ToObject_SingleValue()
+        {
+            CoffeeOptions enumValue = (CoffeeOptions)Enum.ToObject(typeof (CoffeeOptions), 0x04);
+
+            Assert.AreEqual(CoffeeOptions.Milk, enumValue);
+        }
+
+
         [Flags]
         enum CoffeeOptions
         {
