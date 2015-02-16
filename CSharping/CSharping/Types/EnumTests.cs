@@ -99,8 +99,8 @@ namespace CSharping.Types
             CoffeeOptions options = CoffeeOptions.Short | CoffeeOptions.Sugar | CoffeeOptions.Milk;
 
             options = options ^ CoffeeOptions.Sugar;
-            bool hasSugar = (options & CoffeeOptions.Sugar) == CoffeeOptions.Milk;
 
+            bool hasSugar = (options & CoffeeOptions.Sugar) == CoffeeOptions.Sugar;
             Assert.IsFalse(hasSugar);
         }
 
