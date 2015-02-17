@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Globalization;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -101,6 +103,26 @@ namespace CSharping.Types
             public int CompareTo(object obj)
             {
                 return 0;
+            }
+        }
+
+        [Test]
+        public void TypeParameterConstraint_AnotherTypeParameter()
+        {
+            var generic = new GenericWithAnotherTypeParameter<ArgumentException, Exception>();
+            // compile error: ArgumentException does not implement IList
+            // var generic2 = new GenericWithAnotherTypeParameter<ArgumentException, IList>();
+
+            var instance = generic.GetInstance();
+
+            Assert.IsNotNull(instance);
+        }
+
+        class GenericWithAnotherTypeParameter<TDerived, TBase> where TDerived : TBase, new()
+        {
+            public TDerived GetInstance()
+            {
+                return new TDerived();
             }
         }
     }
