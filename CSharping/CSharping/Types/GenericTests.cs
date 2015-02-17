@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Globalization;
-using System.Reflection;
 using NUnit.Framework;
 
 namespace CSharping.Types
