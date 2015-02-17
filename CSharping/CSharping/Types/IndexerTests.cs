@@ -46,7 +46,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void StringIndexer_Get()
+        public void StringIndexer_Get_IndexFound()
         {
             var stringIndexer = new StringIndexer(new Dictionary<string, int>
             {
@@ -58,6 +58,17 @@ namespace CSharping.Types
             Assert.AreEqual(42, stringIndexer["Bob"]);
         }
 
+        [Test]
+        [ExpectedException(typeof(KeyNotFoundException))]
+        public void StringIndexer_Get_IndexNotFound_Throws()
+        {
+            var stringIndexer = new StringIndexer(new Dictionary<string, int>
+            {
+                {"Alice", 22},
+            });
+
+            Assert.AreEqual(999, stringIndexer["Inexistent"]);
+        }
 
         class StringIndexer
         {
