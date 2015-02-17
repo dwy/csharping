@@ -46,5 +46,25 @@ namespace CSharping.Types
                 return new T();
             }
         }
+
+        [Test]
+        public void TypeParameterConstraint_Struct()
+        {
+            var newConstraint = new GenericWithStructConstraint<DateTime>();
+            // compile error: string is no struct
+            // var newConstraint2 = new GenericWithStructConstraint<string>();
+
+            DateTime instance = newConstraint.CreateStruct();
+
+            Assert.IsNotNull(instance);
+        }
+
+        class GenericWithStructConstraint<T> where T : struct
+        {
+            public T CreateStruct()
+            {
+                return new T();
+            }
+        }
     }
 }
