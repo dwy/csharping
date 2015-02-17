@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -64,6 +65,42 @@ namespace CSharping.Types
             public T CreateStruct()
             {
                 return new T();
+            }
+        }
+
+        [Test]
+        public void TypeParameterConstraint_BaseClassOrInterface()
+        {
+            var matchingInstanceToPass = new ComparableStringInfo();
+            var generic = new GenericWithBaseClassOrInterface<ComparableStringInfo>(matchingInstanceToPass);
+            // compile error: string does not have base class nor implements interface
+            // var generic2 = new GenericWithBaseClassOrInterface<string>("");
+
+            ComparableStringInfo instance = generic.GetInstance();
+
+            Assert.IsNotNull(instance);
+        }
+
+        class GenericWithBaseClassOrInterface<T> where T : StringInfo, IComparable
+        {
+            private readonly T _instance;
+
+            public GenericWithBaseClassOrInterface(T instance)
+            {
+                _instance = instance;
+            }
+
+            public T GetInstance()
+            {
+                return _instance;
+            }
+        }
+
+        class ComparableStringInfo: StringInfo, IComparable
+        {
+            public int CompareTo(object obj)
+            {
+                return 0;
             }
         }
     }
