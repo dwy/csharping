@@ -45,13 +45,33 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void Overload_Unambiguious()
+        public void Overload_Unambiguous()
         {
             var over = new MethodOverloads();
 
             int value = over.Get(1);
 
             Assert.AreEqual(1, value);
+        }
+
+        [Test]
+        public void Overload_IntInt()
+        {
+            var over = new MethodOverloads();
+
+            string value = over.Get(1, 2);
+
+            Assert.AreEqual("int int Get", value);
+        }
+
+        [Test]
+        public void Overload_IntDouble()
+        {
+            var over = new MethodOverloads();
+
+            string value = over.Get(1, 2.0);
+
+            Assert.AreEqual("int double Get", value);
         }
 
         class MethodOverloads
@@ -63,12 +83,12 @@ namespace CSharping.Types
 
             public string Get(int x, int y)
             {
-                return string.Format("int int Get({0},{1})", x, y);
+                return "int int Get";
             }
 
             public string Get(int x, double y)
             {
-                return string.Format("int double Get({0},{1})", x, y);
+                return "int double Get";
             }
         }
     }
