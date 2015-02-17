@@ -74,6 +74,16 @@ namespace CSharping.Types
             Assert.AreEqual("int double Get", value);
         }
 
+        [Test]
+        public void NamedParameters()
+        {
+            var over = new MethodOverloads();
+
+            string value = over.Get(y: 2.0, x: 0);
+
+            Assert.AreEqual("int double Get", value); 
+        }
+
         class MethodOverloads
         {
             public int Get(int x)
