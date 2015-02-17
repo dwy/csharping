@@ -43,5 +43,33 @@ namespace CSharping.Types
         {
             public new string GetName() { return "new"; }
         }
+
+        [Test]
+        public void Overload_Unambiguious()
+        {
+            var over = new MethodOverloads();
+
+            int value = over.Get(1);
+
+            Assert.AreEqual(1, value);
+        }
+
+        class MethodOverloads
+        {
+            public int Get(int x)
+            {
+                return x;
+            }
+
+            public string Get(int x, int y)
+            {
+                return string.Format("int int Get({0},{1})", x, y);
+            }
+
+            public string Get(int x, double y)
+            {
+                return string.Format("int double Get({0},{1})", x, y);
+            }
+        }
     }
 }
