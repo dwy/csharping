@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Security.Policy;
 using NUnit.Framework;
 
 namespace CSharping.Types
