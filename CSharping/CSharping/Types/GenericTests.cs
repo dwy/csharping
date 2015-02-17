@@ -30,11 +30,11 @@ namespace CSharping.Types
         [Test]
         public void TypeParameterConstraint_New_ParameterlessConstructor()
         {
-            var newConstraint = new GenericWithNewConstraint<Int32>();
+            var generic = new GenericWithNewConstraint<Int32>();
             // compile error: string has no public parameterless constructor 
-            // var newConstraint2 = new GenericWithNewConstraint<string>();
+            // var generic2 = new GenericWithNewConstraint<string>();
 
-            Int32 instance = newConstraint.CreateInstance();
+            Int32 instance = generic.CreateInstance();
 
             Assert.IsNotNull(instance);
         }
@@ -50,11 +50,11 @@ namespace CSharping.Types
         [Test]
         public void TypeParameterConstraint_Struct()
         {
-            var newConstraint = new GenericWithStructConstraint<DateTime>();
+            var generic = new GenericWithStructConstraint<DateTime>();
             // compile error: string is no struct
-            // var newConstraint2 = new GenericWithStructConstraint<string>();
+            // var generic2 = new GenericWithStructConstraint<string>();
 
-            DateTime instance = newConstraint.CreateStruct();
+            DateTime instance = generic.CreateStruct();
 
             Assert.IsNotNull(instance);
         }
