@@ -216,7 +216,7 @@ namespace CSharping.Types
         }
 
         /*
-         * enums cannot inherit from a enum or a class.
+         * enums cannot inherit from an enum or a class.
          * 
          * compile errors:
          *
