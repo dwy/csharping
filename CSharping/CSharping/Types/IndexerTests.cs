@@ -70,6 +70,22 @@ namespace CSharping.Types
             Assert.AreEqual(999, stringIndexer["Inexistent"]);
         }
 
+        [Test]
+        public void StringIndexer_Set()
+        {
+            var stringIndexer = new StringIndexer(new Dictionary<string, int>
+            {
+                {"Alice", 22},
+                {"Bob", 42},
+            });
+            stringIndexer["Alice"] = 222;
+            stringIndexer["Calvin"] = 333;
+
+            Assert.AreEqual(222, stringIndexer["Alice"]);
+            Assert.AreEqual(42, stringIndexer["Bob"]);
+            Assert.AreEqual(333, stringIndexer["Calvin"]);
+        }
+
         class StringIndexer
         {
             private readonly Dictionary<string, int> _dictionary;
