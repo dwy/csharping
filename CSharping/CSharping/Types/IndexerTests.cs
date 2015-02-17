@@ -44,5 +44,35 @@ namespace CSharping.Types
                 set { _list[index] = value; }
             }
         }
+
+        [Test]
+        public void StringIndexer_Get()
+        {
+            var stringIndexer = new StringIndexer(new Dictionary<string, int>
+            {
+                {"Alice", 22},
+                {"Bob", 42},
+            });
+
+            Assert.AreEqual(22, stringIndexer["Alice"]);
+            Assert.AreEqual(42, stringIndexer["Bob"]);
+        }
+
+
+        class StringIndexer
+        {
+            private readonly Dictionary<string, int> _dictionary;
+
+            public StringIndexer(Dictionary<string, int> dictionary)
+            {
+                _dictionary = dictionary;
+            }
+
+            public int this[string name]
+            {
+                get { return _dictionary[name]; }
+                set { _dictionary[name] = value; }
+            }
+        }
     }
 }
