@@ -65,6 +65,7 @@
     <Compile Include="Threading\ThreadPoolTests.cs" />
     <Compile Include="Types\EnumTests.cs" />
     <Compile Include="Types\IndexerTests.cs" />
+    <Compile Include="Types\MethodTests.cs" />
     <Compile Include="Types\StructTests.cs" />
   </ItemGroup>
   <ItemGroup>
