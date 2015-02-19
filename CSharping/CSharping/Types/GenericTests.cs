@@ -123,5 +123,37 @@ namespace CSharping.Types
                 return new TDerived();
             }
         }
+
+        [Test]
+        public void TypeParameterConstraint_ConstrainMultipleParameters()
+        {
+            var generic = new GenericWithConstraintsOnMultipleParameters<Exception, DateTime>();
+            // compile error: class string has no public parameterless constructor
+            // var generic2 = new GenericWithConstraintsOnMultipleParameters<string, Exception>();
+            // compile error: DateTime is not a reference type
+            // var generic3 = new GenericWithConstraintsOnMultipleParameters<DateTime, DateTime>();
+
+            Exception firstInstance = generic.GetFirstInstance();
+            DateTime secondInstance = generic.GetSecondInstance();
+
+            Assert.IsInstanceOf<Exception>(firstInstance);
+            Assert.IsInstanceOf<DateTime>(secondInstance);
+        }
+
+
+        class GenericWithConstraintsOnMultipleParameters<T1, T2> 
+            where T1 : class, new() 
+            where T2 : new()
+        {
+            public T1 GetFirstInstance()
+            {
+                return new T1();
+            }
+
+            public T2 GetSecondInstance()
+            {
+                return new T2();
+            }
+        }
     }
 }
