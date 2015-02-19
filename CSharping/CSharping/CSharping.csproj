@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -64,6 +65,7 @@
     <Compile Include="Threading\TaskTests.cs" />
     <Compile Include="Threading\ThreadPoolTests.cs" />
     <Compile Include="Types\BoxingUnboxingTests.cs" />
+    <Compile Include="Types\DynamicTests.cs" />
     <Compile Include="Types\EnumTests.cs" />
     <Compile Include="Types\ExtensionTests.cs" />
     <Compile Include="Types\GenericTests.cs" />
