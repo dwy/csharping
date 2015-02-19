@@ -63,6 +63,7 @@
     <Compile Include="Threading\PlinqTests.cs" />
     <Compile Include="Threading\TaskTests.cs" />
     <Compile Include="Threading\ThreadPoolTests.cs" />
+    <Compile Include="Types\BoxingUnboxingTests.cs" />
     <Compile Include="Types\EnumTests.cs" />
     <Compile Include="Types\ExtensionTests.cs" />
     <Compile Include="Types\GenericTests.cs" />
