@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace CSharping.Types
 {
@@ -18,6 +19,16 @@ namespace CSharping.Types
             Assert.AreEqual(42, boxed);
             Assert.AreEqual(42, unboxed);
             Assert.AreEqual(42, value);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void Boxing_InvalidUnboxing()
+        {
+            const int value = 42;
+
+            object boxed = value;
+            byte unboxed = (byte)boxed;
         }
     }
 }
