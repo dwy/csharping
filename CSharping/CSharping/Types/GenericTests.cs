@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -153,6 +154,27 @@ namespace CSharping.Types
             public T2 GetSecondInstance()
             {
                 return new T2();
+            }
+        }
+
+        [Test]
+        public void MethodTypeParameterConstraint()
+        {
+            var generic = new GenericWithMethodTypeParameter<StringInfo>();
+
+            var element = new ComparableStringInfo();
+            ComparableStringInfo resultElement = generic.Get(element);
+            // compile error: StringBuilder does not extend StringInfo
+            // StringBuilder resultElement2 = generic.Get(new StringBuilder());
+
+            Assert.IsInstanceOf<StringInfo>(resultElement);
+        }
+
+        class GenericWithMethodTypeParameter<T1>
+        {
+            public T2 Get<T2>(T2 element) where T2 : T1
+            {
+                return element;
             }
         }
     }
