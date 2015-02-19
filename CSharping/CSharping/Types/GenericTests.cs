@@ -13,9 +13,9 @@ namespace CSharping.Types
         [Test]
         public void Simple()
         {
-            var g = new Generic<string>();
+            var generic = new Generic<string>();
 
-            Type type = g.GetParameterType();
+            Type type = generic.GetParameterType();
 
             Assert.AreEqual(typeof (string), type);
         }
