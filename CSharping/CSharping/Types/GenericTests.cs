@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text;
 using NUnit.Framework;
 
 namespace CSharping.Types
