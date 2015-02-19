@@ -1,4 +1,7 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
+using Microsoft.CSharp.RuntimeBinder;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -42,6 +45,47 @@ namespace CSharping.Types
             public int Get(int i)
             {
                 return i;
+            }
+        }
+
+        [Test]
+        public void DynamicContainer_DynamicallySetMembers()
+        {
+            dynamic container = new DynamicContainer();
+
+            container.DynamicMember1 = 42;
+            container.DynamicMember2 = "Bob";
+
+            Assert.AreEqual(2, container.Count);
+            Assert.AreEqual(42, container.DynamicMember1);
+            Assert.AreEqual("Bob", container.DynamicMember2);
+        }
+
+
+        // adapted from https://msdn.microsoft.com/en-us/library/system.dynamic.dynamicobject.aspx
+        class DynamicContainer : DynamicObject, IEnumerable
+        {
+            private readonly Dictionary<string, object> _dynamicMembers = new Dictionary<string, object>();
+
+            public int Count
+            {
+                get { return _dynamicMembers.Count; }
+            }
+
+            public override bool TrySetMember(SetMemberBinder binder, object value)
+            {
+                _dynamicMembers[binder.Name] = value;
+                return true;
+            }
+
+            public override bool TryGetMember(GetMemberBinder binder, out object result)
+            {
+                return _dynamicMembers.TryGetValue(binder.Name, out result);
+            }
+
+            public IEnumerator GetEnumerator()
+            {
+                return ((IEnumerable) _dynamicMembers).GetEnumerator();
             }
         }
     }
