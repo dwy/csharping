@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using NUnit.Framework;
 
@@ -59,6 +60,23 @@ namespace CSharping.Types
             Assert.AreEqual(2, container.Count);
             Assert.AreEqual(42, container.DynamicMember1);
             Assert.AreEqual("Bob", container.DynamicMember2);
+        }
+
+        [Test]
+        public void DynamicContainer_DynamicallySetMembers_Enumerate()
+        {
+            dynamic container = new DynamicContainer();
+
+            container.FirstName = "Bob";
+            container.Age = 42;
+
+            var builder = new StringBuilder();
+            foreach (dynamic member in container)
+            {
+                builder.AppendFormat("{0}={1};", member.Key, member.Value);
+            }
+
+            Assert.AreEqual("FirstName=Bob;Age=42;", builder.ToString());
         }
 
         [Test]
