@@ -61,6 +61,14 @@ namespace CSharping.Types
             Assert.AreEqual("Bob", container.DynamicMember2);
         }
 
+        [Test]
+        [ExpectedException(typeof(RuntimeBinderException))]
+        public void DynamicContainer_InexistentMember_Throws()
+        {
+            dynamic container = new DynamicContainer();
+
+            Assert.AreEqual(42, container.InexistentMember);
+        }
 
         // adapted from https://msdn.microsoft.com/en-us/library/system.dynamic.dynamicobject.aspx
         class DynamicContainer : DynamicObject, IEnumerable
