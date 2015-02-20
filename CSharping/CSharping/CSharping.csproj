@@ -70,6 +70,7 @@
     <Compile Include="Types\ExtensionTests.cs" />
     <Compile Include="Types\GenericTests.cs" />
     <Compile Include="Types\IndexerTests.cs" />
+    <Compile Include="Types\InterfaceTests.cs" />
     <Compile Include="Types\MethodTests.cs" />
     <Compile Include="Types\StructTests.cs" />
   </ItemGroup>
