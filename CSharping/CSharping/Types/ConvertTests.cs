@@ -32,7 +32,7 @@ namespace CSharping.Types
         {
             const string date = "2015-02-23";
 
-            DateTime convertedDate = (DateTime) Convert.ChangeType(date, TypeCode.DateTime, CultureInfo.CreateSpecificCulture("fr-CH"));
+            DateTime convertedDate = (DateTime) Convert.ChangeType(date, TypeCode.DateTime, CultureInfo.InvariantCulture);
 
             Assert.AreEqual(2015, convertedDate.Year);
             Assert.AreEqual(2, convertedDate.Month);
