@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -26,5 +27,16 @@ namespace CSharping.Types
             Assert.AreEqual(1, longNumber);
         }
 
+        [Test]
+        public void StringToNumber_TypeCode_FormatProvider()
+        {
+            const string date = "2015-02-23";
+
+            DateTime convertedDate = (DateTime) Convert.ChangeType(date, TypeCode.DateTime, CultureInfo.CreateSpecificCulture("fr-CH"));
+
+            Assert.AreEqual(2015, convertedDate.Year);
+            Assert.AreEqual(2, convertedDate.Month);
+            Assert.AreEqual(23, convertedDate.Day);
+        }
     }
 }
