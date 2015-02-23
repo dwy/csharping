@@ -7,7 +7,7 @@ namespace CSharping.Types
     public class ConvertTests
     {
         [Test]
-        public void UNIT_SCENARIO_RESULT()
+        public void StringToNumber()
         {
             const string number = "1";
 
@@ -15,5 +15,16 @@ namespace CSharping.Types
 
             Assert.AreEqual(1, integer);
         }
+
+        [Test]
+        public void StringToNumber_TypeCode()
+        {
+            const string number = "1";
+
+            long longNumber = (long) Convert.ChangeType(number, TypeCode.Int64);
+
+            Assert.AreEqual(1, longNumber);
+        }
+
     }
 }
