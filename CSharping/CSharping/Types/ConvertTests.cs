@@ -28,7 +28,7 @@ namespace CSharping.Types
         }
 
         [Test]
-        public void StringToNumber_TypeCode_FormatProvider()
+        public void StringToDate_TypeCode_FormatProvider()
         {
             const string date = "2015-02-23";
 
@@ -37,6 +37,24 @@ namespace CSharping.Types
             Assert.AreEqual(2015, convertedDate.Year);
             Assert.AreEqual(2, convertedDate.Month);
             Assert.AreEqual(23, convertedDate.Day);
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException))]
+        public void InvalidFormat_Throws()
+        {
+            const string date = "invalid date";
+
+            Convert.ChangeType(date, TypeCode.Double);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void InvalidCast_Throws()
+        {
+            const byte value = 255;
+
+            Convert.ChangeType(value, TypeCode.DateTime);
         }
     }
 }
