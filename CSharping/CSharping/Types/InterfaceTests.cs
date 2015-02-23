@@ -53,6 +53,7 @@ namespace CSharping.Types
 
             string hello = ((ISayHello)impl).Greet();
             string hi = ((ISayHi)impl).Greet();
+            // compile error: string greet = impl.Greet();
 
             Assert.AreEqual("hello", hello);
             Assert.AreEqual("hi", hi);
@@ -69,6 +70,28 @@ namespace CSharping.Types
             {
                 return "hello";
             }
+        }
+
+        [Test]
+        public void SameImplementationForTwoInterfaces()
+        {
+            var impl = new ClassWithSameImplementation();
+
+            string hello = ((ISayHello)impl).Greet();
+            string hi = ((ISayHi)impl).Greet();
+            string greet = impl.Greet();
+
+            Assert.AreEqual("greet", hello);
+            Assert.AreEqual("greet", hi);
+            Assert.AreEqual("greet", greet);
+        }
+
+        class ClassWithSameImplementation : ISayHi, ISayHello
+        {
+            public string Greet()
+            {
+                return "greet";
+            }   
         }
 
         interface ISayHi
