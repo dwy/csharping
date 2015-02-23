@@ -56,5 +56,17 @@ namespace CSharping.Types
 
             Convert.ChangeType(value, TypeCode.DateTime);
         }
+
+        [Test]
+        public void ToXyzExamples()
+        {
+            bool boolean = Convert.ToBoolean("true");
+            char c = Convert.ToChar(0x32);
+            sbyte sByte = Convert.ToSByte(123);
+
+            Assert.AreEqual(true, boolean);
+            Assert.AreEqual('2', c);
+            Assert.AreEqual(123, sByte);
+        }
     }
 }
