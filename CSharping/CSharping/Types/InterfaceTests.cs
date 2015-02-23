@@ -28,22 +28,57 @@ namespace CSharping.Types
         [Test]
         public void ExplicitInterfaceImplementation_InstanceMustBeCast()
         {
-            var impl = new FormattableExplicitImplementation();
+            var impl = new ClassWithExplicitImplementation();
 
+            string result = ((ISayHi)impl).Greet();
             // compile error: method does not exist 
-            // string result = impl.ToString("hi", CultureInfo.InvariantCulture);
-            string result = ((IFormattable)impl).ToString("hi", CultureInfo.InvariantCulture);
+            // string result = impl.TGreet();
 
             Assert.AreEqual(result, "hi");
         }
 
-        class FormattableExplicitImplementation : IFormattable
+        class ClassWithExplicitImplementation : ISayHi
         {
-            // explicit IFormattabe implementation
-            string IFormattable.ToString(string format, IFormatProvider formatProvider)
+            // explicit implementation
+            string ISayHi.Greet()
             {
-                return format;
+                return "hi";
             }
+        }
+
+        [Test]
+        public void TwoExplicitImplementations()
+        {
+            var impl = new ClassWithTwoExplicitImplementations();
+
+            string hello = ((ISayHello)impl).Greet();
+            string hi = ((ISayHi)impl).Greet();
+
+            Assert.AreEqual("hello", hello);
+            Assert.AreEqual("hi", hi);
+        }
+
+        class ClassWithTwoExplicitImplementations : ISayHi, ISayHello
+        {
+            string ISayHi.Greet()
+            {
+                return "hi";
+            }
+
+            string ISayHello.Greet()
+            {
+                return "hello";
+            }
+        }
+
+        interface ISayHi
+        {
+            string Greet();
+        }
+
+        interface ISayHello
+        {
+            string Greet();
         }
     }
 }
