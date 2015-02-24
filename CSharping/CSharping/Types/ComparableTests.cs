@@ -192,5 +192,26 @@ namespace CSharping.Types
                 return x.Value.CompareTo(y.Value);
             }
         }
+
+        [Test]
+        public void StringComparer_OrderBy()
+        {
+            var values = new List<string>
+            {
+                "Bob", "Francis", "Alice"
+            };
+
+            var sorted = values.OrderBy(s => s, StringComparer.InvariantCulture).ToList();
+            var reversed = values.OrderByDescending(s => s, StringComparer.OrdinalIgnoreCase).ToList();
+
+            Assert.AreEqual("Alice", sorted[0]);
+            Assert.AreEqual("Bob", sorted[1]);
+            Assert.AreEqual("Francis", sorted[2]);
+
+            Assert.AreEqual("Francis", reversed[0]);
+            Assert.AreEqual("Bob", reversed[1]);
+            Assert.AreEqual("Alice", reversed[2]);
+        }
+
     }
 }
