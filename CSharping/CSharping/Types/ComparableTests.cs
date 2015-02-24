@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -98,7 +99,7 @@ namespace CSharping.Types
                 new Data(4), new Data(2), new Data(1), new Data(3),
             };
 
-            var dataComparer = new DataComparer();
+            var dataComparer = new GenericDataIComparer();
             values.Sort(dataComparer);
 
             Assert.AreEqual(1, values[0].Value);
@@ -122,13 +123,45 @@ namespace CSharping.Types
             }
         }
 
-        class DataComparer : IComparer<Data>
+        class GenericDataIComparer : IComparer<Data>
         {
             public int Compare(Data x, Data y)
             {
                 if (x == null) return -1;
                 if (y == null) return 1;
                 return x.Value.CompareTo(y.Value);
+            }
+        }
+
+        [Test]
+        public void IComparer_SortArray()
+        {
+            var values = new []
+            {
+                new Data(4), new Data(2), new Data(1), new Data(3),
+            };
+
+            var dataComparer = new DataIComparer();
+            Array.Sort(values, dataComparer);
+
+            Assert.AreEqual(1, values[0].Value);
+            Assert.AreEqual(2, values[1].Value);
+            Assert.AreEqual(3, values[2].Value);
+            Assert.AreEqual(4, values[3].Value);
+        }
+
+        class DataIComparer: IComparer
+        {
+            public int Compare(object x, object y)
+            {
+                if (x == null) return -1;
+                if (y == null) return 1;
+
+                var cx = x as Data;
+                var cy = y as Data;
+
+                if (cx == null || cy == null) throw new ArgumentException("should be an instance of Data");
+                return cx.Value.CompareTo(cy.Value);
             }
         }
     }
