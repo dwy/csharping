@@ -65,6 +65,7 @@
     <Compile Include="Threading\TaskTests.cs" />
     <Compile Include="Threading\ThreadPoolTests.cs" />
     <Compile Include="Types\BoxingUnboxingTests.cs" />
+    <Compile Include="Types\ComparableTests.cs" />
     <Compile Include="Types\ConvertTests.cs" />
     <Compile Include="Types\DynamicTests.cs" />
     <Compile Include="Types\EnumTests.cs" />
