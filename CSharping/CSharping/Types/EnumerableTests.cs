@@ -81,13 +81,24 @@ namespace CSharping.Types
         public void CustomListIterator_ToList_EnumeratorIsUsed()
         {
             var customList = new CustomList<int> { 1, 2, 3 };
-            
+
+            // also using enumerator: ToArray(), ToDictionary(), ToLookup()
             List<int> newList = customList.ToList();
 
             Assert.IsTrue(customList.WasIterated);
             Assert.AreEqual(1, newList[0]);
             Assert.AreEqual(2, newList[1]);
             Assert.AreEqual(3, newList[2]);
+        }
+
+        [Test]
+        public void CustomListIterator_Select_EnumeratorIsNotUsed()
+        {
+            var customList = new CustomList<int> { 1, 2, 3 };
+
+            IEnumerable<int> incrementedElements = customList.Select(n => n + 1);
+
+            Assert.IsFalse(customList.WasIterated);
         }
 
         class CustomList<T>: IEnumerable<T>
