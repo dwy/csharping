@@ -69,6 +69,7 @@ namespace CSharping.Types
                 }
             }
 
+            // need to implement the non-generic IEnumerable because IEnumerable<T> implements IEnumerable
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
