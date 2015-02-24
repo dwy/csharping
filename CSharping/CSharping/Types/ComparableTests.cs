@@ -89,5 +89,47 @@ namespace CSharping.Types
                 // equivalent: return _value.CompareTo(other._value);
             }
         }
+
+        [Test]
+        public void GenericIComparer()
+        {
+            var values = new List<Data>
+            {
+                new Data(4), new Data(2), new Data(1), new Data(3),
+            };
+
+            var dataComparer = new DataComparer();
+            values.Sort(dataComparer);
+
+            Assert.AreEqual(1, values[0].Value);
+            Assert.AreEqual(2, values[1].Value);
+            Assert.AreEqual(3, values[2].Value);
+            Assert.AreEqual(4, values[3].Value);
+        }
+
+        class Data
+        {
+            private readonly float _value;
+
+            public Data(float value)
+            {
+                _value = value;
+            }
+
+            public float Value
+            {
+                get { return _value; }
+            }
+        }
+
+        class DataComparer : IComparer<Data>
+        {
+            public int Compare(Data x, Data y)
+            {
+                if (x == null) return -1;
+                if (y == null) return 1;
+                return x.Value.CompareTo(y.Value);
+            }
+        }
     }
 }
