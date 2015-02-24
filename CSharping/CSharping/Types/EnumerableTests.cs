@@ -18,6 +18,7 @@ namespace CSharping.Types
             Assert.AreEqual(0, result[0]);
             Assert.AreEqual(1, result[1]);
             Assert.AreEqual(2, result[2]);
+            Assert.AreEqual(3, result[3]);
         }
 
         class CountTo : IEnumerable
@@ -31,10 +32,46 @@ namespace CSharping.Types
 
             public IEnumerator GetEnumerator()
             {
-                for (int i = 0; i <= _count; i++) // compiler generates enumerator
+                for (int i = 0; i <= _count; i++) // compiler generates enumerator class
                 {
                     yield return i;
                 }
+            }
+        }
+
+        [Test]
+        public void GenericIEnumerable_YieldReturn_CompilerGeneratesEnumerator()
+        {
+            var counter = new GenericCountTo(3);
+
+            var result = counter.ToList();
+
+            Assert.AreEqual(0, result[0]);
+            Assert.AreEqual(1, result[1]);
+            Assert.AreEqual(2, result[2]);
+            Assert.AreEqual(3, result[3]);
+        }
+
+        class GenericCountTo: IEnumerable<int>
+        {
+            private readonly int _count;
+
+            public GenericCountTo(int count)
+            {
+                _count = count;
+            }
+
+            public IEnumerator<int> GetEnumerator()
+            {
+                for (int i = 0; i <= _count; i++) // compiler generates enumerator class
+                {
+                    yield return i;
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
     }
