@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -162,6 +163,33 @@ namespace CSharping.Types
 
                 if (cx == null || cy == null) throw new ArgumentException("should be an instance of Data");
                 return cx.Value.CompareTo(cy.Value);
+            }
+        }
+
+        [Test]
+        public void Comparer_SortList()
+        {
+            var values = new List<Data>
+            {
+                new Data(4), new Data(2), new Data(1), new Data(3),
+            };
+
+            var dataComparer = new DataComparer();
+            values.Sort(dataComparer);
+
+            Assert.AreEqual(1, values[0].Value);
+            Assert.AreEqual(2, values[1].Value);
+            Assert.AreEqual(3, values[2].Value);
+            Assert.AreEqual(4, values[3].Value); 
+        }
+
+        class DataComparer: Comparer<Data>
+        {
+            public override int Compare(Data x, Data y)
+            {
+                if (x == null) return -1;
+                if (y == null) return 1;
+                return x.Value.CompareTo(y.Value);
             }
         }
     }
