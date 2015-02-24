@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -74,6 +75,91 @@ namespace CSharping.Types
             {
                 return GetEnumerator();
             }
+        }
+
+        [Test]
+        public void CustomListIterator_ToList_EnumeratorIsUsed()
+        {
+            var customList = new CustomList<int> { 1, 2, 3 };
+            
+            List<int> newList = customList.ToList();
+
+            Assert.IsTrue(customList.WasIterated);
+            Assert.AreEqual(1, newList[0]);
+            Assert.AreEqual(2, newList[1]);
+            Assert.AreEqual(3, newList[2]);
+        }
+
+        class CustomList<T>: IEnumerable<T>
+        {
+            private bool _wasIterated = false;
+            private readonly List<T> _list = new List<T>(); 
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                _wasIterated = true;
+                return new ListIterator<T>(_list);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public bool WasIterated
+            {
+                get { return _wasIterated; }
+            }
+
+            // used by the collection initialiser
+            public void Add(T element)
+            {
+                _list.Add(element);
+            }
+        }
+
+        class ListIterator<T> : IEnumerator<T>
+        {
+            private readonly IList<T> _list;
+            private int _currentPosition = -1;
+
+            public ListIterator(IList<T> list)
+            {
+                _list = list;
+            }
+
+            public bool MoveNext()
+            {
+                _currentPosition++;
+                return _currentPosition < _list.Count;
+            }
+
+            public void Reset()
+            {
+                _currentPosition = -1;
+            }
+
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
+
+            public T Current
+            {
+                get
+                {
+                    try
+                    {
+                        return _list[_currentPosition];
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        throw new InvalidOperationException("Invalid cursor position", e);
+                    }
+                }
+            }
+
+            public void Dispose() { }
         }
     }
 }
