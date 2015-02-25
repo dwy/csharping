@@ -67,6 +67,7 @@
     <Compile Include="Types\BoxingUnboxingTests.cs" />
     <Compile Include="Types\ComparableTests.cs" />
     <Compile Include="Types\ConvertTests.cs" />
+    <Compile Include="Types\DisposableTests.cs" />
     <Compile Include="Types\DynamicTests.cs" />
     <Compile Include="Types\EnumerableTests.cs" />
     <Compile Include="Types\EnumTests.cs" />
