@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace CSharping.Types
@@ -79,6 +81,72 @@ namespace CSharping.Types
                 // by the garbage collector, hence calling Dispose with false.
                 Dispose(false);
             }
+        }
+
+        [Test]
+        public void DisposableExample_Using_CallsDispose()
+        {
+            DisposableResource disposable;
+            using (disposable = new DisposableResource())
+            {
+                // do stuff
+            }
+
+            Assert.IsTrue(disposable.WasDisposed);
+        }
+
+        class DisposableResource : IDisposable
+        {
+            public bool WasDisposed { get; private set; }
+
+            private IntPtr _unmanagedHandle ;
+            private List<object> _managedList;
+
+            public DisposableResource()
+            {
+                _unmanagedHandle = new IntPtr(42);
+                _managedList = new List<object>
+                {
+                    new { name = "stuff", value = 123 },
+                    1234,
+                    CultureInfo.InvariantCulture
+                };
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (WasDisposed) return;
+
+                if (disposing)
+                {
+                    if (_managedList != null)
+                    {
+                        _managedList.Clear();
+                        _managedList = null;
+                        // _otherManagedResource.Dispose();
+                    }
+                }
+
+                CloseHandle(_unmanagedHandle);
+                _unmanagedHandle = IntPtr.Zero;
+
+                WasDisposed = true;
+            }
+
+            ~DisposableResource()
+            {
+                Dispose(false);
+            }
+
+            // Use interop to call the method necessary to clean up the unmanaged resource.
+            [System.Runtime.InteropServices.DllImport("Kernel32")]
+            private extern static Boolean CloseHandle(IntPtr handle);
         }
     }
 }
