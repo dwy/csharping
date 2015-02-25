@@ -85,7 +85,7 @@ namespace CSharping.Types
             // also using enumerator: ToArray(), ToDictionary(), ToLookup()
             List<int> newList = customList.ToList();
 
-            Assert.IsTrue(customList.WasIterated);
+            Assert.IsTrue(customList.WasEnumerated);
             Assert.AreEqual(1, newList[0]);
             Assert.AreEqual(2, newList[1]);
             Assert.AreEqual(3, newList[2]);
@@ -98,17 +98,17 @@ namespace CSharping.Types
 
             IEnumerable<int> incrementedElements = customList.Select(n => n + 1);
 
-            Assert.IsFalse(customList.WasIterated);
+            Assert.IsFalse(customList.WasEnumerated);
         }
-
+        
         class CustomList<T>: IEnumerable<T>
         {
-            private bool _wasIterated = false;
+            private bool _wasEnumerated = false;
             private readonly List<T> _list = new List<T>(); 
 
             public IEnumerator<T> GetEnumerator()
             {
-                _wasIterated = true;
+                _wasEnumerated = true;
                 return new ListIterator<T>(_list);
             }
 
@@ -117,9 +117,9 @@ namespace CSharping.Types
                 return GetEnumerator();
             }
 
-            public bool WasIterated
+            public bool WasEnumerated
             {
-                get { return _wasIterated; }
+                get { return _wasEnumerated; }
             }
 
             // used by the collection initialiser
