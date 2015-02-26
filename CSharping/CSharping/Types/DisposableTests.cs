@@ -119,6 +119,11 @@ namespace CSharping.Types
                 GC.SuppressFinalize(this);
             }
 
+            ~DisposableResource()
+            {
+                Dispose(false);
+            }
+
             protected virtual void Dispose(bool disposing)
             {
                 if (WasDisposed) return;
@@ -139,14 +144,46 @@ namespace CSharping.Types
                 WasDisposed = true;
             }
 
-            ~DisposableResource()
-            {
-                Dispose(false);
-            }
-
             // Use interop to call the method necessary to clean up the unmanaged resource.
             [System.Runtime.InteropServices.DllImport("Kernel32")]
             private extern static Boolean CloseHandle(IntPtr handle);
+        }
+
+        [Test]
+        public void DerivedDisposable_ImplementVirtualDispose_CallBaseMethod()
+        {
+            DerivedDisposableResource derivedDisposable;
+            using (derivedDisposable = new DerivedDisposableResource())
+            {
+                // do stuff
+            }
+
+            Assert.IsTrue(derivedDisposable.WasDisposed);
+        }
+
+        class DerivedDisposableResource : DisposableResource
+        {
+            public new bool WasDisposed { get; private set; }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (WasDisposed) return;
+
+                if (disposing)
+                {
+                    // free managed resources
+                }
+
+                // free unmanaged resources
+
+                WasDisposed = true;
+
+                // base classes resources must be freed too
+                base.Dispose(disposing);
+            }
+
+            // do NOT override finaliser since base class already has one
+            // ~DerivedDisposableResource() {}
         }
     }
 }
